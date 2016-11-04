@@ -96,7 +96,7 @@ LIBS           = -lparser -lql ../lib/libsm.a -lix -lrm -lpf -lgtest
 #
 # Build targets
 #
-all: $(LIBRARIES) $(UTILS) tags gtest
+all: $(LIBRARIES) $(UTILS)
 
 clean: tags-clean
 	rm -f $(BUILD_DIR)*.o $(BUILD_DIR)*.d y.output y.tab.h \
@@ -113,7 +113,7 @@ test: testers gtest
 	./ix_testkpg_2
 	./gtest
 
-tag tags: 
+tag tags:
 	find . -type f | grep -v "\.git" | grep -v docs | xargs etags
 
 tags-clean:
@@ -200,9 +200,8 @@ $(BUILD_DIR)%.d: %.cc
 	 sed 's,\($*\)\.o[ :]*,\1.o $@: ,g' $@.$$$$ > $@; \
 	 rm -f $@.$$$$
 
-$(OBJECTS): %.o: 
+$(OBJECTS): %.o:
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(EXECUTABLES): %: $(BUILD_DIR)%.o $(LIBRARIES)
 	$(CC) $(CFLAGS) $< -o $@ -L$(LIB_DIR) $(LIBS)
-

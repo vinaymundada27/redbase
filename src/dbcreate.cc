@@ -11,6 +11,7 @@
 #include <string>
 #include <sstream>
 #include <unistd.h>
+#include <stddef.h>
 #include "rm.h"
 #include "sm.h"
 #include "redbase.h"
@@ -37,10 +38,10 @@ int main(int argc, char *argv[])
     cerr << "Usage: " << argv[0] << " <dbname> \n";
     exit(1);
   }
-  
+
     // The database name is the second argument
   string dbname(argv[1]);
-  
+
   // Create a subdirectory for the database
   stringstream command;
   command << "mkdir " << dbname;
@@ -54,24 +55,24 @@ int main(int argc, char *argv[])
         cerr << argv[0] << " chdir error to " << dbname << "\n";
         exit(1);
   }
-  
+
   // Create the system catalogs...
   PF_Manager pfm;
   RM_Manager rmm(pfm);
   RM_FileHandle relfh, attrfh;
 
   if(
-    (rc = rmm.CreateFile("relcat", DataRelInfo::size())) 
+    (rc = rmm.CreateFile("relcat", DataRelInfo::size()))
     || (rc =  rmm.OpenFile("relcat", relfh))
-    ) 
+    )
     PrintErrorExit(rc);
-  
+
   if(
-    (rc = rmm.CreateFile("attrcat", DataAttrInfo::size())) 
+    (rc = rmm.CreateFile("attrcat", DataAttrInfo::size()))
     || (rc =  rmm.OpenFile("attrcat", attrfh))
     )
     PrintErrorExit(rc);
-  
+
   DataRelInfo relcat_rel;
   strcpy(relcat_rel.relName, "relcat");
   relcat_rel.attrCount = DataRelInfo::members();
@@ -86,12 +87,12 @@ int main(int argc, char *argv[])
   attrcat_rel.recordSize = DataAttrInfo::size();
   attrcat_rel.numPages = 1; // initially
   attrcat_rel.numRecords = DataAttrInfo::members() + DataRelInfo::members();
-  
+
   RID rid;
   if ((rc = relfh.InsertRec((char*) &relcat_rel, rid)) < 0
       ||   (rc = relfh.InsertRec((char*) &attrcat_rel, rid)) < 0
     )
-    PrintErrorExit(rc);  
+    PrintErrorExit(rc);
 
   // relcat attrs
   DataAttrInfo a;
@@ -102,7 +103,7 @@ int main(int argc, char *argv[])
   a.attrLength = MAXNAME+1;
   a.indexNo = -1;
   if ((rc = attrfh.InsertRec((char*) &a, rid)) < 0)
-    PrintErrorExit(rc);  
+    PrintErrorExit(rc);
 
   strcpy(a.relName, "relcat");
   strcpy(a.attrName, "recordSize");
@@ -111,7 +112,7 @@ int main(int argc, char *argv[])
   a.attrLength = sizeof(int);
   a.indexNo = -1;
   if ((rc = attrfh.InsertRec((char*) &a, rid)) < 0)
-    PrintErrorExit(rc);  
+    PrintErrorExit(rc);
 
   strcpy(a.relName, "relcat");
   strcpy(a.attrName, "attrCount");
@@ -129,7 +130,7 @@ int main(int argc, char *argv[])
   a.attrLength = sizeof(int);
   a.indexNo = -1;
   if ((rc = attrfh.InsertRec((char*) &a, rid)) < 0)
-    PrintErrorExit(rc);  
+    PrintErrorExit(rc);
 
   strcpy(a.relName, "relcat");
   strcpy(a.attrName, "numRecords");
@@ -138,7 +139,7 @@ int main(int argc, char *argv[])
   a.attrLength = sizeof(int);
   a.indexNo = -1;
   if ((rc = attrfh.InsertRec((char*) &a, rid)) < 0)
-    PrintErrorExit(rc);  
+    PrintErrorExit(rc);
 
 
   // attrcat attrs
@@ -149,7 +150,7 @@ int main(int argc, char *argv[])
   a.attrLength = MAXNAME+1;
   a.indexNo = -1;
   if ((rc = attrfh.InsertRec((char*) &a, rid)) < 0)
-    PrintErrorExit(rc);  
+    PrintErrorExit(rc);
 
   strcpy(a.relName, "attrcat");
   strcpy(a.attrName, "attrName");
@@ -167,7 +168,7 @@ int main(int argc, char *argv[])
   a.attrLength = sizeof(int);
   a.indexNo = -1;
   if ((rc = attrfh.InsertRec((char*) &a, rid)) < 0)
-    PrintErrorExit(rc);  
+    PrintErrorExit(rc);
 
   strcpy(a.relName, "attrcat");
   strcpy(a.attrName, "attrType");
@@ -176,7 +177,7 @@ int main(int argc, char *argv[])
   a.attrLength = sizeof(AttrType);
   a.indexNo = -1;
   if ((rc = attrfh.InsertRec((char*) &a, rid)) < 0)
-    PrintErrorExit(rc);  
+    PrintErrorExit(rc);
 
   strcpy(a.relName, "attrcat");
   strcpy(a.attrName, "attrLength");
@@ -185,7 +186,7 @@ int main(int argc, char *argv[])
   a.attrLength = sizeof(int);
   a.indexNo = -1;
   if ((rc = attrfh.InsertRec((char*) &a, rid)) < 0)
-    PrintErrorExit(rc);  
+    PrintErrorExit(rc);
 
   strcpy(a.relName, "attrcat");
   strcpy(a.attrName, "indexNo");
@@ -194,8 +195,8 @@ int main(int argc, char *argv[])
   a.attrLength = sizeof(int);
   a.indexNo = -1;
   if ((rc = attrfh.InsertRec((char*) &a, rid)) < 0)
-    PrintErrorExit(rc);  
-    
+    PrintErrorExit(rc);
+
   strcpy(a.relName, "attrcat");
   strcpy(a.attrName, "func");
   a.offset = offsetof(DataAttrInfo, func);
@@ -203,14 +204,13 @@ int main(int argc, char *argv[])
   a.attrLength = sizeof(AggFun);
   a.indexNo = -1;
        if ((rc = attrfh.InsertRec((char*) &a, rid)) < 0)
-    PrintErrorExit(rc); 
+    PrintErrorExit(rc);
 
 
   if ((rc =  rmm.CloseFile(attrfh)) < 0
     || (rc =  rmm.CloseFile(relfh)) < 0
     )
     PrintErrorExit(rc);
-  
+
   return(0);
 }
-
