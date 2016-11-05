@@ -14,7 +14,7 @@
 
   function renderGraph(type)
   {
-    var str = "<object type=\"text/html\" data=\"static/" + type +".html\" style=\"width:100%; height:500px; margin:2%; \"></object>"
+    var str = "<object type=\"text/html\" data=\"" + type +".html\" style=\"width:100%; height:500px; margin:2%; \"></object>"
     document.getElementById('graph').innerHTML=str;
   }
 
@@ -175,7 +175,9 @@
   </div>
 
     <div id = "graph"> </div>
-
+    <object type="text/html" data="/static/bar.html"
+            style="width:100%; height:500px; margin:2%; ">
+    </object>
   </div>
 </div>
 </div>
