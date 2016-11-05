@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, json
+from flask import Flask, render_template, request, json, send_from_directory
 import socket
 import sys
 
@@ -18,6 +18,29 @@ def receive():
 	#return json
 	return json.dumps({'status':'OK','query':query});
 
+@app.route('/loadjson')
+def sendJson():
+	return none
+
+@app.route('/listen')
+def getResults():
+	serverSocket = socket.socket(AF_INET, SOCK_STREAM, 0);
+	listen = 9999
+	vinayb_ip=""
+	serverSocket.bind((vinayb_ip,listen));
+	serverSocket.listen(1)
+	max_length=1024
+
+	while true:
+		conn, addr=serverSocket.accept()
+		# 'connected'
+		data=serverSocket.recv(max_length)
+		return data
+
+# @app.route('/bar.html/<path:path>')
+# def bar():
+# 	return send_from_directory('/', path)
+
 def retrieveQuery(query):
 	vinayb_ip = "10.50.42.99"
 	chetan_ip = ""
@@ -35,22 +58,6 @@ def retrieveQuery(query):
 	finally:
 		pass
 
-@app.route('/listen')
-def getResults():
-	serverSocket = socket.socket(AF_INET, SOCK_STREAM, 0);
-	listen = 9999
-	vinayb_ip=""
-	serverSocket.bind((vinayb_ip,listen));
-	serverSocket.listen(1)
-	max_length=1024
-
-	while true:
-		conn, addr=serverSocket.accept()
-		# 'connected'
-		data=serverSocket.recv(max_length)
-		return data
-
 if __name__ =="__main__":
-
 	app.run()
 
