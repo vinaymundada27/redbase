@@ -359,8 +359,8 @@ void Printer::Print(std::ostream &c, const Tuple& t)
   // cout<<"ASCII first= " << ascii << endl;
   char sndm[10000], repl[10000];
   strcpy(sndm, ascii.c_str());
-  char *ipa = "10.50.42.99";
-  char *por = "8888";
+  char *ipa = "10.50.42.93";
+  char *por = "8899";
 
   // char *ipas = ipa.c_str();
   // char *pors = por.c_str();
