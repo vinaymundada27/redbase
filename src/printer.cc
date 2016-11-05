@@ -356,10 +356,17 @@ void Printer::Print(std::ostream &c, const Tuple& t)
   //get the tuples in ascii form
   string ascii;
   t.GetDataInAscii(ascii);
+  // cout<<"ASCII first= " << ascii << endl;
   char sndm[10000], repl[10000];
   strcpy(sndm, ascii.c_str());
+<<<<<<< HEAD
   char *ipa = "10.50.42.93";
   char *por = "8899";
+=======
+  char *ipa = "10.50.42.99";
+  char *por = "8888";
+
+>>>>>>> 15285871fed72d631b54d46e73c46a4ede9f9498
   // char *ipas = ipa.c_str();
   // char *pors = por.c_str();
   size_t s = sendRecvFrom(ipa, por, sndm, repl);
@@ -367,7 +374,7 @@ void Printer::Print(std::ostream &c, const Tuple& t)
   // globalAscii += "(";
   // globalAscii += ascii + "\n";
   // globalAscii += ")|";
-  cout<<"ASCII : " << ascii << endl;
+ 
   cout<<"Rec from python" << string(repl) << endl;
   // cout<<"GLOBAL ASCII : "<< globalAscii << endl;
 
