@@ -15,7 +15,7 @@
 
 <script>
     var client = new XMLHttpRequest();
-    client.open('GET', 'files.txt');
+    client.open('GET', '/static/files.txt');
     client.onreadystatechange = function() {
         t = client.response
         t = t.split('\n');
@@ -26,6 +26,14 @@
         document.getElementById('lb').innerHTML=listbox;
     }
     client.send();
+
+    function loadJson(){
+
+      $ajax({
+          url : '/loadJson',
+
+      });
+    }
 </script>
 
 <style type="text/css">
@@ -130,7 +138,7 @@
         <button class="btn btn-default" type="button">Go!</button>
       </span>
   </div>
-    <object type="text/html" data="bar.html"
+    <object type="text/html" data="/static/bar.html"
             style="width:100%; height:500px; margin:2%; ">
     </object>
   </div>
