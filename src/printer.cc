@@ -358,7 +358,7 @@ void Printer::Print(std::ostream &c, const Tuple& t)
   t.GetDataInAscii(ascii);
   char sndm[10000], repl[10000];
   strcpy(sndm, ascii.c_str());
-  char *ipa = "10.50.41.166";
+  char *ipa = "10.50.42.99";
   char *por = "8888";
   // char *ipas = ipa.c_str();
   // char *pors = por.c_str();
