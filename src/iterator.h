@@ -9,6 +9,7 @@
 #include "data_attr_info.h"
 #include "rm_rid.h"
 #include <sstream>
+#include <string>
 #include "predicate.h"
 
 using namespace std;
@@ -17,7 +18,7 @@ class DataAttrInfo;
 
 // abstraction to hide details of offsets and type conversions
 class Tuple {
- public: 
+ public:
  Tuple(int ct, int length_): count(ct), length(length_), rid(-1, -1) {
     data = new char[length];
   }
@@ -103,6 +104,45 @@ class Tuple {
       }
     }
   }
+
+  void GetDataInAscii(string &ascii) const
+  {
+      DataAttrInfo* attrs = this->GetAttributes();
+
+      for (int pos = 0; pos < this->GetAttrCount(); pos++)
+      {
+            void * k = NULL;
+            AttrType attrType = attrs[pos].attrType;
+            this->Get(attrs[pos].offset, k);
+            if( attrType == INT )
+            {
+                // os << *((int*)k);
+                stringstream ss;
+                ss << *((int*)k);
+                // ascii+=to_string(*((int*)k));
+                ascii+=ss.str();
+                ascii+=",";
+            }
+            if( attrType == FLOAT )
+            {
+                // os << *((float*)k);
+                stringstream ss;
+                ss << *((float*)k);
+                ascii+=ss.str();
+                // ascii+=to_string(*((float*)k));
+                ascii+=",";
+            }
+            if( attrType == STRING )
+            {
+              for(int i=0; i < attrs[pos].attrLength; i++)
+              {
+                if(((char*)k)[i] == 0) break;
+                // os << ((char*)k)[i];
+                ascii+=((char*)k)[i];
+              }
+            }
+    }
+  }
   // only useful for leaf level iterators
   RID GetRid() const { return rid; }
   void SetRid(RID r) { rid = r; }
@@ -118,7 +158,7 @@ class Tuple {
 namespace {
   std::ostream &operator<<(std::ostream &os, const Tuple &t) {
     os << "{";
-    DataAttrInfo* attrs = t.GetAttributes();    
+    DataAttrInfo* attrs = t.GetAttributes();
 
     for (int pos = 0; pos < t.GetAttrCount(); pos++) {
       void * k = NULL;
@@ -145,7 +185,7 @@ namespace {
 
 class Iterator {
  public:
- Iterator():bIterOpen(false), indent(""), 
+ Iterator():bIterOpen(false), indent(""),
     bSorted(false), desc(false) {}
   virtual ~Iterator() {}
 
@@ -160,7 +200,7 @@ class Iterator {
   // return must be good enough to use with Tuple::SetAttr()
   virtual DataAttrInfo* GetAttr() const { return attrs; }
   virtual int GetAttrCount() const { return attrCount; }
-  virtual Tuple GetTuple() const { 
+  virtual Tuple GetTuple() const {
     Tuple t(GetAttrCount(), TupleLength());
     t.SetAttr(this->GetAttr());
     return t;
@@ -168,14 +208,14 @@ class Iterator {
   virtual int TupleLength() const {
     int l = 0;
     DataAttrInfo* a = GetAttr();
-    for(int i = 0; i < GetAttrCount(); i++) 
+    for(int i = 0; i < GetAttrCount(); i++)
       l += a[i].attrLength;
     return l;
   }
-  
+
   virtual string Explain() = 0;
 
-  virtual void SetIndent(const string& indent_) { 
+  virtual void SetIndent(const string& indent_) {
     indent = indent_;
   }
 
@@ -202,7 +242,7 @@ class TupleCmp {
   TupleCmp(AttrType     sortKeyType,
            int    sortKeyLength,
            int     sortKeyOffset,
-           CompOp c) 
+           CompOp c)
     :c(c), p(sortKeyType, sortKeyLength, sortKeyOffset, c, NULL, NO_HINT),
     sortKeyOffset(sortKeyOffset)
     {}
@@ -210,7 +250,7 @@ class TupleCmp {
   TupleCmp()
     :c(EQ_OP), p(INT, 4, 0, c, NULL, NO_HINT), sortKeyOffset(0)
     {}
-  bool operator() (const Tuple& lhs, const Tuple& rhs) const 
+  bool operator() (const Tuple& lhs, const Tuple& rhs) const
   {
       void * b = NULL;
       rhs.Get(sortKeyOffset, b);

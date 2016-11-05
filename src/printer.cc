@@ -8,9 +8,15 @@
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>
+#include <iostream>
+#include <fstream>
+#include <exception>
+#include <string>
 #include "printer.h"
 #include "parser.h"
 
+void writeToFile(const char* data);
+string globalAscii="";
 using namespace std;
 
 //
@@ -206,10 +212,16 @@ void Printer::Print(ostream &c, const void * const data[])
                 strncpy(str, (char *)data[i], MAXPRINTSTRING-1);
                 str[MAXPRINTSTRING-3] ='.';
                 str[MAXPRINTSTRING-2] ='.';
+
+                // writeToFile(str);
+
                 c << str;
                 Spaces(MAXPRINTSTRING, strlen(str));
             } else {
                 strncpy(str, (char *)data[i], attributes[i].attrLength);
+
+                // writeToFile(str);
+
                 c << str;
                 if (attributes[i].attrLength < (int) strlen(psHeader[i]))
                     Spaces(strlen(psHeader[i]), strlen(str));
@@ -220,6 +232,9 @@ void Printer::Print(ostream &c, const void * const data[])
         if (attributes[i].attrType == INT) {
             memcpy (&a, data[i], sizeof(int));
             sprintf(strSpace, "%d",a);
+
+            // writeToFile(str);
+
             c << a;
             if (strlen(psHeader[i]) < 12)
                 Spaces(12, strlen(strSpace));
@@ -243,7 +258,17 @@ void Printer::Print(std::ostream &c, const Tuple& t)
 {
   const char * data;
   t.GetData(data);
-  // cout << "Printer::Print(tuple) " << t << endl;
+
+  //get the tuples in ascii form
+  string ascii;
+  t.GetDataInAscii(ascii);
+  globalAscii += "(";
+  globalAscii += ascii;
+  globalAscii += ")|";
+  cout<<"ASCII : " << ascii << endl;
+  cout<<"GLOBAL ASCII : "<< globalAscii << endl;
+
+  // print the tuples on console
   Print(c, data);
 }
 
@@ -256,6 +281,7 @@ void Printer::Print(std::ostream &c, const Tuple& t)
 //  attempt is made to keep the tuple constrained to some number of
 //  characters.
 //
+
 void Printer::Print(ostream &c, const char * const data)
 {
     char str[MAXPRINTSTRING], strSpace[50];
@@ -280,10 +306,16 @@ void Printer::Print(ostream &c, const char * const data)
                 strncpy(str, data+attributes[i].offset, MAXPRINTSTRING-1);
                 str[MAXPRINTSTRING-3] ='.';
                 str[MAXPRINTSTRING-2] ='.';
+
+                // writeToFile(str);
+
                 c << str;
                 Spaces(MAXPRINTSTRING, strlen(str));
             } else {
                 strncpy(str, data+attributes[i].offset, attributes[i].attrLength);
+
+                // writeToFile(str);
+
                 c << str;
                 if (attributes[i].attrLength < (int) strlen(psHeader[i]))
                     Spaces(strlen(psHeader[i]), strlen(str));
@@ -294,6 +326,9 @@ void Printer::Print(ostream &c, const char * const data)
         if (attributes[i].attrType == INT) {
             memcpy (&a, (data+attributes[i].offset), sizeof(int));
             sprintf(strSpace, "%d",a);
+
+            // writeToFile(str);
+
             c << a;
             if (strlen(psHeader[i]) < 12)
                 Spaces(12, strlen(strSpace));
@@ -303,6 +338,9 @@ void Printer::Print(ostream &c, const char * const data)
         if (attributes[i].attrType == FLOAT) {
             memcpy (&b, (data+attributes[i].offset), sizeof(float));
             sprintf(strSpace, "%f",b);
+
+            // writeToFile(str);
+
             c << strSpace;
             if (strlen(psHeader[i]) < 12)
                 Spaces(12, strlen(strSpace));
@@ -311,4 +349,28 @@ void Printer::Print(ostream &c, const char * const data)
         }
     }
     c << "\n";
+}
+
+void writeToFile(const char * data)
+{
+    cout<<"writing file\n";
+    try{
+        // fstream outputfile;
+        // outputfile.open("TESTYTESY.txt", fstream::out);
+        // outputfile << data <<endl;
+
+        FILE* fptr=fopen("test.txt","w");
+        if(fptr!=NULL)
+        {
+            char* s="vinaychetanvinay";
+            cout<<"file not null\n";
+            fputs(s, fptr);
+            fclose(fptr);
+        }
+    }
+    catch(exception& e)
+    {
+        cout << e.what() <<endl;
+    }
+
 }

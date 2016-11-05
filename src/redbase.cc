@@ -9,6 +9,8 @@
 #include <cstdio>
 #include <cstring>
 #include <unistd.h>
+#include <fstream>
+#include <iostream>
 #include "redbase.h"
 #include "rm.h"
 #include "sm.h"
@@ -53,7 +55,7 @@ int main(int argc, char *argv[])
   // close the database
   if ((rc = smm.CloseDb()))
     PrintErrorExit(rc);
-  
+
   if(parseRC != 0)
     PrintErrorExit(parseRC);
 
