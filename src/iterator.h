@@ -119,9 +119,7 @@ class Tuple {
                 // os << *((int*)k);
                 stringstream ss;
                 ss << *((int*)k);
-                // ascii+=to_string(*((int*)k));
                 ascii+=ss.str();
-                // ascii+=",";
             }
             if( attrType == FLOAT )
             {
@@ -129,8 +127,6 @@ class Tuple {
                 stringstream ss;
                 ss << *((float*)k);
                 ascii+=ss.str();
-                // ascii+=to_string(*((float*)k));
-                // ascii+=",";
             }
             if( attrType == STRING )
             {
