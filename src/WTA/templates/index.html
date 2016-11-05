@@ -27,13 +27,28 @@
     }
     client.send();
 
-    function loadJson(){
+    function sendQuery(){
+    // var query=document.getElementById("query").value;
 
-      $ajax({
-          url : '/loadJson',
+    var query = $('#query').val();
+    var q = { 'query': query };
 
-      });
-    }
+    $.ajax({
+      url  : '/response',
+      data : JSON.stringify(q),
+      contentType : 'application/json',
+      type : 'POST',
+      success : function (r) {
+        alert(r);
+        console.log(r);
+      },
+      error : function(error) {
+        alert('Errror!');
+        console.log(error);
+      }
+    });
+  }
+
 </script>
 
 <style type="text/css">
@@ -135,7 +150,7 @@
   <div class="input-group">
     <input type="text" class="form-control">
       <span class="input-group-btn">
-        <button class="btn btn-default" type="button">Go!</button>
+        <button class="btn btn-default" type="button" onclick="sendQuery()">Go!</button>
       </span>
   </div>
     <object type="text/html" data="/static/bar.html"
