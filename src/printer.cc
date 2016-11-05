@@ -75,13 +75,17 @@ boost::asio::ip::tcp::socket* Printer::enableConnection(char *host, char *port)
 size_t Printer::writeRead(boost::asio::ip::tcp::socket *s, char request[], char reply[])
 {
   std::cout << "Write read trying to write.." << std::endl;
+  boost::system::error_code error;
   size_t request_length = std::strlen(request);
     boost::asio::write(*s, boost::asio::buffer(request, request_length));
   std::cout << "Success written" << std::endl;
   std::cout << "Waiting to read.." << std::endl;
-  size_t reply_length = boost::asio::read(*s,
-        boost::asio::buffer(reply, request_length));
-  std::cout << "Read" << std::endl;
+  // size_t reply_length = boost::asio::read(*s,
+  //       boost::asio::buffer(reply, request_length*4));
+  // size_t len;
+  size_t reply_length = s->read_some(boost::asio::buffer(reply, request_length), error);
+  reply[reply_length] = '\0';
+  std::cout << "Read " << reply << std::endl;
   return reply_length;
 }
 
