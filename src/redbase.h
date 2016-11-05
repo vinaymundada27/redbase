@@ -9,6 +9,11 @@
 #include <iostream>
 #include <cmath>
 #include <cassert>
+#include <string>
+
+// Global Ascii;
+using namespace std;
+// static string globalAscii="";
 
 //
 // Globally-useful defines
@@ -79,7 +84,7 @@ enum CompOp {
 //
 enum AggFun {
   NO_F,
-  MIN_F, MAX_F, COUNT_F, 
+  MIN_F, MAX_F, COUNT_F,
   SUM_F, AVG_F           // numeric args only
 };
 

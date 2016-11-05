@@ -16,7 +16,7 @@
 #include "parser.h"
 
 void writeToFile(const char* data);
-string globalAscii="";
+// string globalAscii="";
 using namespace std;
 
 //
@@ -259,14 +259,20 @@ void Printer::Print(std::ostream &c, const Tuple& t)
   const char * data;
   t.GetData(data);
 
+  cout << "PRINT TUPLE : " << t << endl;
   //get the tuples in ascii form
   string ascii;
   t.GetDataInAscii(ascii);
-  globalAscii += "(";
-  globalAscii += ascii;
-  globalAscii += ")|";
+  // globalAscii += "(";
+  // globalAscii += ascii + "\n";
+  // globalAscii += ")|";
   cout<<"ASCII : " << ascii << endl;
-  cout<<"GLOBAL ASCII : "<< globalAscii << endl;
+  // cout<<"GLOBAL ASCII : "<< globalAscii << endl;
+
+  /*
+    method to send each tuple over the socket
+  */
+  // sendResultInAscii(ascii);
 
   // print the tuples on console
   Print(c, data);
