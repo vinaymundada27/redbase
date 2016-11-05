@@ -14,6 +14,7 @@
 #include "catalog.h"
 #include "data_attr_info.h"
 #include "iterator.h"
+#include <boost/asio.hpp>
 
 #define MAXPRINTSTRING  ((2*MAXNAME) + 5)
 
@@ -41,6 +42,12 @@ class Printer {
   void Print(std::ostream &c, const char * const data);
   void Print(std::ostream &c, const void * const data[]);
   void Print(std::ostream &c, const Tuple& t);
+
+  size_t sendRecvFrom(char *host, char *port, char request[], char reply[]);
+  boost::asio::ip::tcp::socket* enableConnection(char *host, char *port);
+  size_t writeRead(boost::asio::ip::tcp::socket *s, char request[], char reply[]);
+
+
 
   void PrintFooter(std::ostream &c) const;
   

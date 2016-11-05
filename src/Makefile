@@ -25,7 +25,7 @@ LEX            = flex
 # -O1 - Basic optimization
 # -Wall - All warnings
 # -DDEBUG_PF - This turns on the LOG file for lots of BufferMgr info
-CFLAGS         = -m32 -ggdb -DDEBUG -O0 -Wall $(STATS_OPTION) $(INC_DIRS)
+CFLAGS         = -m32 -ggdb -std=c++11 -DDEBUG -O0 -Wall $(STATS_OPTION) $(INC_DIRS) 
 
 # The STATS_OPTION can be set to -DPF_STATS or to nothing to turn on and
 # off buffer manager statistics.  The student should not modify this
@@ -85,13 +85,13 @@ LIBRARY_PARSER = $(LIB_DIR)libparser.a
 LIBRARY_GTEST  = $(LIB_DIR)libgtest.a
 LIBRARIES      = $(LIBRARY_PF) $(LIBRARY_RM) $(LIBRARY_IX) \
                  $(LIBRARY_SM) $(LIBRARY_QL) $(LIBRARY_PARSER) \
-		 $(LIBRARY_GTEST)
+		 $(LIBRARY_GTEST) 
 
 UTILS          = $(UTILS_SOURCES:.cc=)
 TESTS          = $(TESTER_SOURCES:.cc=)
 EXECUTABLES    = $(UTILS) $(TESTS)
 
-LIBS           = -lparser -lql ../lib/libsm.a -lix -lrm -lpf -lgtest
+LIBS           = -lparser -lql ../lib/libsm.a -lboost_system -lboost_thread -pthread -lix -lrm -lpf -lgtest
 
 #
 # Build targets
