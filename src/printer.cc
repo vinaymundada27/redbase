@@ -12,6 +12,7 @@
 #include <fstream>
 #include <exception>
 #include <string>
+#include <boost/asio.hpp>
 #include "printer.h"
 #include "parser.h"
 
@@ -52,6 +53,98 @@ Printer::Printer(const DataAttrInfo *attributes_, const int attrCount_)
 {
   Init(attributes_, attrCount_);
 }
+
+boost::asio::ip::tcp::socket* Printer::enableConnection(char *host, char *port)
+{
+  std::cout << "Conn started" << std::endl;
+  boost::asio::io_service io_service;
+
+  boost::asio::ip::tcp::socket *s = new boost::asio::ip::tcp::socket(io_service);
+  boost::asio::ip::tcp::resolver resolver(io_service);
+  try {
+    boost::asio::connect(*s, resolver.resolve({host, port}));
+  }
+  catch (boost::system::system_error const& e)
+  {
+    std::cout << "Warning: could not connect : " << e.what() << std::endl;
+  }
+  std::cout << "Conn established" << std::endl;
+  return s;
+}
+
+size_t Printer::writeRead(boost::asio::ip::tcp::socket *s, char request[], char reply[])
+{
+  std::cout << "Write read trying to write.." << std::endl;
+  boost::system::error_code error;
+  size_t request_length = std::strlen(request);
+    boost::asio::write(*s, boost::asio::buffer(request, request_length));
+  std::cout << "Success written" << std::endl;
+  std::cout << "Waiting to read.." << std::endl;
+  // size_t reply_length = boost::asio::read(*s,
+  //       boost::asio::buffer(reply, request_length*4));
+  // size_t len;
+  size_t reply_length = s->read_some(boost::asio::buffer(reply, request_length), error);
+  reply[reply_length] = '\0';
+  std::cout << "Read " << reply << std::endl;
+  return reply_length;
+}
+
+size_t Printer::sendRecvFrom(char *host, char *port, 
+                           char request[], char reply[])
+{
+  std::cout << "sendrecv starting" << std::endl;
+  boost::asio::ip::tcp::socket *s = enableConnection(host, port);
+  std::cout << "sendrecv finish; trying writeRead" << std::endl;
+  size_t rn = writeRead(s, request, reply);
+  std::cout << "writeread fin, sendrecv fin" << std::endl;
+  return rn;
+}
+
+
+
+// void Printer::session(boost::asio::ip::tcp::socket sock)
+// {
+//   try
+//   {
+//     for (;;)
+//     {
+//       char data[max_length];
+//       char reply_msg[max_length];
+
+//       boost::system::error_code error;
+//       size_t length = sock.read_some(boost::asio::buffer(data), error);
+//       if (error == boost::asio::error::eof)
+//         break; // Connection closed cleanly by peer.
+//       else if (error)
+//         throw boost::system::system_error(error); // Some other error.
+      
+      
+//       boost::asio::write(sock, boost::asio::buffer(data, length));
+//     }
+//   }
+//   catch (std::exception& e)
+//   {
+//     std::cerr << "Exception in thread: " << e.what() << "\n";
+//   }
+// }
+
+// void Printer::server(boost::asio::io_service& io_service, unsigned short port)
+// {
+//   boost::asio::ip::tcp::acceptor a(io_service, 
+//     boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port));
+//   for (;;)
+//   {
+//     boost::asio::ip::tcp::socket sock(io_service);
+//     a.accept(sock);
+//     std::thread(session, std::move(sock)).detach();
+//   }
+// }
+
+// void Printer::spawnServer(unsigned short port)
+// {
+//   boost::asio::io_service io_service;
+//   server(io_service, port);
+// }
 
 void Printer::Init(const DataAttrInfo *attributes_, const int attrCount_)
 {
@@ -263,10 +356,19 @@ void Printer::Print(std::ostream &c, const Tuple& t)
   //get the tuples in ascii form
   string ascii;
   t.GetDataInAscii(ascii);
+  char sndm[10000], repl[10000];
+  strcpy(sndm, ascii.c_str());
+  char *ipa = "10.50.42.99";
+  char *por = "8888";
+  // char *ipas = ipa.c_str();
+  // char *pors = por.c_str();
+  size_t s = sendRecvFrom(ipa, por, sndm, repl);
+  repl[s] = '\0';
   // globalAscii += "(";
   // globalAscii += ascii + "\n";
   // globalAscii += ")|";
   cout<<"ASCII : " << ascii << endl;
+  cout<<"Rec from python" << string(repl) << endl;
   // cout<<"GLOBAL ASCII : "<< globalAscii << endl;
 
   /*

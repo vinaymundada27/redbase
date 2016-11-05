@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+
+<script src="static/jquery-1.9.0.js"></script>
+<!-- <script src="static/js/script.js"></script> -->
+
+<script type="text/javascript">
+	
+	function sendData(){
+		// var query=document.getElementById("query").value;
+
+		var query = $('#query').val();
+		var q = { 'query': query };
+
+		$.ajax({
+			url  : '/response',
+			data : JSON.stringify(q),
+			contentType : 'application/json',
+			type : 'POST',
+			success : function (r) {
+				alert(r);
+				console.log(r);
+			},
+			error : function(error) {
+				alert('Errror!');
+				console.log(error);
+			}
+ 		});
+	}
+
+</script>
+<body>
+	Query : <textarea id="query" rows="2" cols=50" maxlength="1000"></textarea> <button onclick="sendData()">Submit</button>
+</body>
+</html>
