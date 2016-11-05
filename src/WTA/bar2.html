@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<head>
+	<style>
+
+  .bar{
+    fill: steelblue;
+  }
+
+  .bar:hover{
+    fill: brown;
+  }
+
+	.toolTip {
+			font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+			position: absolute;
+			display: none;
+			width: auto;
+			height: auto;
+			background: none repeat scroll 0 0 white;
+			border: 0 none;
+			border-radius: 8px 8px 8px 8px;
+			box-shadow: -3px 3px 15px #888888;
+			color: black;
+			font: 12px sans-serif;
+			padding: 5px;
+			text-align: center;
+	}
+
+	.axis {
+	  font: 10px sans-serif;
+	}
+
+	.axis path,
+	.axis line {
+	  fill: none;
+	  stroke: #000;
+	  shape-rendering: crispEdges;
+	}
+
+	</style>
+</head>
+
+<body>
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+
+<script>
+// set the dimensions of the canvas
+var margin = {top: 20, right: 20, bottom: 70, left: 40},
+    width = 1000 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+
+// set the ranges
+var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
+
+var y = d3.scale.linear().range([height, 0]);
+
+// define the axis
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom")
+
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    .ticks(10);
+
+
+// add the SVG element
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+
+// load the data
+d3.json("data.json", function(error, data) {
+
+    data.forEach(function(d) {
+        d.X = d.X;
+        d.Y = +d.Y;
+    });
+
+	var div = d3.select("body").append("div").attr("class", "toolTip");
+
+  // scale the range of the data
+  x.domain(data.map(function(d) { return d.X; }));
+  y.domain([0, d3.max(data, function(d) { return d.Y; })]);
+
+  // add axis
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+    .selectAll("text")
+      .style("text-anchor", "end")
+      .attr("dx", "-.8em")
+      .attr("dy", "-.55em")
+      .attr("transform", "rotate(-90)" );
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 5)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Frequency");
+
+
+  // Add bar chart
+  svg.selectAll("bar")
+      .data(data)
+    .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d) { return x(d.X); })
+      .attr("width", x.rangeBand())
+      .attr("y", function(d) { return y(d.Y); })
+      .attr("height", function(d) { return height - y(d.Y); })
+			.on("mousemove", function(d){
+					div.style("left", d3.event.pageX+10+"px");
+					div.style("top", d3.event.pageY-25+"px");
+					div.style("display", "inline-block");
+					div.html((d.X)+"<br>"+(d.Y))
+				})
+			.on("mouseout", function(d){
+							div.style("display", "none");
+					});
+		
+
+});
+
+</script>
+
+</body>
