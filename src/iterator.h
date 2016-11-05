@@ -108,7 +108,7 @@ class Tuple {
   void GetDataInAscii(string &ascii) const
   {
       DataAttrInfo* attrs = this->GetAttributes();
-      ascii += "{";
+
       for (int pos = 0; pos < this->GetAttrCount(); pos++)
       {
             void * k = NULL;
@@ -119,7 +119,9 @@ class Tuple {
                 // os << *((int*)k);
                 stringstream ss;
                 ss << *((int*)k);
+                // ascii+=to_string(*((int*)k));
                 ascii+=ss.str();
+                ascii+=",";
             }
             if( attrType == FLOAT )
             {
@@ -127,6 +129,8 @@ class Tuple {
                 stringstream ss;
                 ss << *((float*)k);
                 ascii+=ss.str();
+                // ascii+=to_string(*((float*)k));
+                ascii+=",";
             }
             if( attrType == STRING )
             {
@@ -137,11 +141,7 @@ class Tuple {
                 ascii+=((char*)k)[i];
               }
             }
-            ascii+=",";
-        }
-
-        ascii+="\b\b";
-        ascii+="}";
+    }
   }
   // only useful for leaf level iterators
   RID GetRid() const { return rid; }

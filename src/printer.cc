@@ -356,6 +356,7 @@ void Printer::Print(std::ostream &c, const Tuple& t)
   //get the tuples in ascii form
   string ascii;
   t.GetDataInAscii(ascii);
+  cout<<"ASCII first= " << ascii << endl;
   char sndm[10000], repl[10000];
   strcpy(sndm, ascii.c_str());
   char *ipa = "10.50.41.166";
