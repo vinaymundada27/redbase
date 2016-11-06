@@ -24,6 +24,16 @@ def settablename():
 	target.write(table)
 	return json.dumps({'result' : 'OK'})
 
+@app.route('/loadtable', methods=['POST'])
+def loadtable():
+	table = request.json['query'];
+	with open('static/tablename') as f:
+		content = f.readlines();
+		content = [x.strip('\n') for x in content]
+	content = ','.join(content)
+	print(content)
+	return json.dumps({'name' : content})
+
 @app.route('/loadattr', methods=['POST'])
 def loadattr():
 	table = request.json['tablename']

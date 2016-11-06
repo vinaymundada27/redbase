@@ -17,9 +17,9 @@
 
 <script>
 
-  function renderGraph(type, tabn)
+  function renderGraph(type)
   {
-    var str = '<object type="text/html" data="/static/' + type + '.html" style="width:100%; height:500px; margin:2%; " id="graph-' + tabn + '" class="graphobject"></object>"'
+    var str = '<object type="text/html" data="/static/' + type + '.html" style="width:100%; height:500px; margin:2%; "'  + 'class="graphobject"></object>"'
     console.log(str)
     document.getElementById('graph').innerHTML=str;
   }
@@ -35,6 +35,7 @@
       contentType : 'application/json',
       type : 'POST',
       success : function (r) {
+        console.log('success sendquery')
         var json=jQuery.parseJSON(r);
         $.notify("SUCCESS", "success");
         console.log(r);
@@ -45,6 +46,8 @@
           console.log(error);
       }
     });
+
+    renderGraph('tab');
   }
 
   function setTableName(table) {

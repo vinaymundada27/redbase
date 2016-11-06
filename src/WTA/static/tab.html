@@ -61,15 +61,35 @@
         });
       }
 
-      // getAttr($(".graphobject").attr('id').split('-')[1]);
-      var tblname = "";
-      var client = new XMLHttpRequest();
-      client.open('GET', '/static/tablename');
-      client.onreadystatechange = function() {
-        tblname = client.responseText;
+      function getTable(){
+        console.log("I was called");
+        var q = {};
+        var json = {};
+        q['query'] = "query";
+        $.ajax({
+          url  : '/loadtable',
+          data : JSON.stringify(q),
+          contentType : 'application/json',
+          type : 'POST',
+          success : function (r) {
+            console.log('success loadattr');
+            json = jQuery.parseJSON(r);
+            console.log(json);
+            console.log(r);
+            var tbn = json['name'];
+            getAttr(tbn);
+          },
+          error : function(error) {
+             $.notify("SERVER ERROR or INVALID QUERY", { position:"top center" });
+              console.log(error);
+          }
+        });
       }
-      client.send();
-      getAttr(tblname);
+
+      // getAttr($(".graphobject").attr('id').split('-')[1]);
+      
+
+      getTable();
       
       function triggerD3(arr) {
         d3.json("data.json", function(error, data) {
