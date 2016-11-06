@@ -10,7 +10,7 @@ def submit():
 
 @app.route('/response', methods=['POST'])
 def receive():
-	query = request.json['query']
+	query = request.json['query'];
 	
 	#process query
 	result=retrieveQuery(query)
@@ -36,10 +36,6 @@ def getResults():
 		# 'connected'
 		data=serverSocket.recv(max_length)
 		return data
-
-# @app.route('/bar.html/<path:path>')
-# def bar():
-# 	return send_from_directory('/', path)
 
 def retrieveQuery(query):
 	vinayb_ip = "10.50.42.99"
