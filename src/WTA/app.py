@@ -9,10 +9,12 @@ def submit():
 	return render_template('index.html')
 
 def tupleSplit(tuple):
-    val = tuple.split(',')
+    vals = tuple.split(',')
     d = {}
-    d['X']=val[1]
-    d['Y']=val[0]
+    count = 0
+    for val in vals:
+    	d[str(count)] = val
+    	count += 1
     return d
 
 @app.route('/response', methods=['POST'])

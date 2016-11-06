@@ -101,7 +101,7 @@ all: $(LIBRARIES) $(UTILS)
 clean: tags-clean
 	rm -f $(BUILD_DIR)*.o $(BUILD_DIR)*.d y.output y.tab.h \
 	parse.c	scan.c test.out testrel.* \
-	$(LIBRARIES) $(EXECUTABLES) gtest $(BUILD_DIR)*.d.*
+	$(EXECUTABLES) gtest $(BUILD_DIR)*.d.*
 
 testers: all $(TESTS)
 
