@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="static/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="static/js/notify.min.js"></script>
 
 <script>
 
@@ -19,9 +20,16 @@
   }
 
     function sendQuery(){
-
     var query=document.getElementById("query").value;
   
+    $.notify("SUCCESS!", "success",
+      {position : "left"});
+
+    $.notify(
+  "I'm to the right of this box", 
+  { position:"center" }
+);
+    // $.notify("Do not press this button", "info");
     var query = $('#query').val();
     var q = { 'query': query };
     document.getElementById("query").value="";
@@ -33,11 +41,11 @@
       type : 'POST',
       success : function (r) {
         var json=jQuery.parseJSON(r);  
-        alert(json['result']);
+        $.notify("Access granted", "success");
         console.log(r);
       },
       error : function(error) {
-        alert('Errror!');
+        $.notify("SERVER ERROR!", "error");
         console.log(error);
       }
     });
