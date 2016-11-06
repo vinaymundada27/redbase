@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+
+<head>
+  <style>
+  table th {
+    width: 10px;
+}
+</style>
+<title>Title</title>
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script type = "text/javascript" src = "json-to-table.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+  <h1>Hi there!</h1>
+  <div id = 'table'></div>
+  <script>
+      //Example data, Object
+      //var json = require('./data.json');
+      d3.json("data.json", function(error, data) {
+
+          data.forEach(function(d) {
+              d.X = d.X;
+              d.Y = +d.Y;
+          });
+
+      var objectArray = [{
+          "Total": "34",
+          "Version": "1.0.4",
+          }, {
+          "Total": "67",
+          "Version": "1.1.0",
+
+      }];
+
+      //Example data, Array
+      var stringArray = ["New York", "Berlin", "Paris", "Marrakech", "Moscow"];
+
+      //Example data, nested Object. This data will create nested table also.
+      var nestedTable = [{
+          key1: "val1",
+          key2: "val2",
+          key3: {
+              tableId: "tblIdNested1",
+              tableClassName: "clsNested",
+              linkText: "Download",
+              data: [{
+                  subkey1: "subval1",
+                  subkey2: "subval2",
+                  subkey3: "subval3"
+              }]
+          }
+      }];
+
+      var jsonHtmlTable = ConvertJsonToTable(data, 'jsonTable', null, 'Download');
+      document.getElementById('table').innerHTML = jsonHtmlTable;
+      window.alert(jsonHtmlTable)
+
+    });
+  </script>
+</body>
+
+
+</html>

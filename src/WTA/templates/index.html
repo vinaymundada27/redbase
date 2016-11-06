@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>Example of Bootstrap 3 Static Navbar Extended</title>
-
+<title>Data Visualization</title>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <script>
+
+  function renderGraph(type)
+  {
+    var str = "<object type=\"text/html\" data=\"static/" + type +".html\" style=\"width:100%; height:500px; margin:2%; \"></object>"
+    document.getElementById('graph').innerHTML=str;
+  }
+
     var client = new XMLHttpRequest();
     client.open('GET', '/static/files.txt');
     client.onreadystatechange = function() {
@@ -27,13 +31,28 @@
     }
     client.send();
 
-    function loadJson(){
+    function sendQuery(){
+    // var query=document.getElementById("query").value;
 
-      $ajax({
-          url : '/loadJson',
+    var query = $('#query').val();
+    var q = { 'query': query };
 
-      });
-    }
+    $.ajax({
+      url  : '/response',
+      data : JSON.stringify(q),
+      contentType : 'application/json',
+      type : 'POST',
+      success : function (r) {
+        alert(r);
+        console.log(r);
+      },
+      error : function(error) {
+        alert('Errror!');
+        console.log(error);
+      }
+    });
+  }
+
 </script>
 
 <style type="text/css">
@@ -131,16 +150,32 @@
   </div>
   <div class="col-sm-9"
   margin-top: 15px;
-  margin-bottom: 15px;">
+  margin-bottom: "15px;">
   <div class="input-group">
     <input type="text" class="form-control">
       <span class="input-group-btn">
-        <button class="btn btn-default" type="button">Go!</button>
-      </span>
+
+
+
+        <div class = "btn-group " >
+          <button type = "button" class = "btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle = "dropdown">
+            Visualize
+          <span class = "caret"></span>
+          </button>
+
+        <ul class = "dropdown-menu dropdown-menu-right" role = "menu">
+          <button class="btn btn-secondary" type="button" style="width:100%" onClick = "renderGraph('table')">Table</button><br />
+          <button class="btn btn-secondary" type="button" style="width:100%" onClick = "renderGraph('bar2')">Bar Graph</button><br />
+          <button class="btn btn-secondary" type="button" style="width:100%" onClick = "renderGraph('bar')">Horizontal Bar Graph</button><br />
+          <button class="btn btn-secondary" type="button" style="width:100%" onClick = "renderGraph('line')">Line Graph</button><br />
+          <button class="btn btn-secondary" type="button" style="width:100%" onClick = "renderGraph('pie')">Pie Chart</button><br />
+        </ul>
+      </div>
+    </span>
   </div>
-    <object type="text/html" data="/static/bar.html"
-            style="width:100%; height:500px; margin:2%; ">
-    </object>
+
+    <div id = "graph"> </div>
+
   </div>
 </div>
 </div>
