@@ -17,6 +17,17 @@ def tupleSplit(tuple):
     	count += 1
     return d
 
+@app.route('/loadattr', methods=['POST'])
+def loadattr():
+	table = request.json['tablename']
+	file_name = 'static/' + table + '_attr'
+	content = []
+	with open(file_name) as f:
+		content = f.readlines()
+		content = [x.strip('\n') for x in content]
+	content = content.join(',')
+	return json.dumps({'names' : content})
+
 @app.route('/response', methods=['POST'])
 def receive():
 	query = request.json['query']
