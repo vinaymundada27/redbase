@@ -27,6 +27,17 @@ static int charptr = 0;
 static int lower(char *dst, char *src, int max);
 static char *mk_string(char *s, int len);
 
+extern FILE* inputFilePtr;
+int my_yyinput(char * buf, int max_size) {
+  // read a character from the input file
+  char c = (char) fgetc(inputFilePtr);
+  // copy it to the buffer
+  *buf = c;
+  // the number of characters read
+  return 1;
+}
+
+
 /*
  * string_alloc: returns a pointer to a string of length len if possible
  */

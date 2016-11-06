@@ -61,14 +61,14 @@ function ConvertJsonToTable(parsedJson, tableId, tableClassName, linkText)
     var classMarkup = tableClassName ? ' class="' + tableClassName + '"' :
                                        '';
 
-    var tbl = '<table class="table table-nonfluid table-striped table-hover" border="1" cellpadding="1" cellspacing="1"' + idMarkup + classMarkup + '>{0}{1}</table>';
+    var tbl = '<table class="table table-nonfluid table-striped table-hover" border="1" width="200" cellpadding="1" cellspacing="1"' + idMarkup + classMarkup + '>{0}{1}</table>';
 
     //Patterns for table content
     var th = '<thead>{0}</thead>';
     var tb = '<tbody>{0}</tbody>';
     var tr = '<tr>{0}</tr>';
-    var thRow = '<th>{0}</th>';
-    var tdRow = '<td>{0}</td>';
+    var thRow = '<th><center>{0}</center></th>';
+    var tdRow = '<td ><center>{0}</center></td>';
     var thCon = '';
     var tbCon = '';
     var trCon = '';
