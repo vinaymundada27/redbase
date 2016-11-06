@@ -61,7 +61,7 @@
         });
       }
 
-      getAttr('vinay');
+      getAttr($("#graph > object").attr('id').split('-')[1]);
       
       function triggerD3(arr) {
         d3.json("data.json", function(error, data) {
