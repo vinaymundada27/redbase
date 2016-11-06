@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <fstream>
 #include <unistd.h>
 #include <sys/types.h>
 #include "redbase.h"
@@ -87,7 +88,10 @@ RC interp(NODE *n)
          {
             int nattrs;
             AttrInfo attrInfos[MAXATTRS];
-
+            ofstream myfile;
+            myfile.open("../WTA/static/files.txt", ios::out | ios::app);
+            myfile << n -> u.CREATETABLE.relname << std::endl;
+            myfile.close();
             /* Make sure relation name isn't too long */
             if(strlen(n -> u.CREATETABLE.relname) > MAXNAME){
                print_error((char*)"create", E_TOOLONG);
