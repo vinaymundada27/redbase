@@ -51,8 +51,9 @@
           contentType : 'application/json',
           type : 'POST',
           success : function (r) {
-            json=jQuery.parseJSON(r);
-            $.notify("ATTR LOADED", "success");
+            console.log('success loadattr');
+            json = jQuery.parseJSON(r);
+            console.log(json);
             console.log(r);
           },
           error : function(error) {
@@ -60,17 +61,21 @@
               console.log(error);
           }
         });
-        return json['names'].split(',');
+        console.log(json);
+        return json['names'];
       }
       //Example data, Object
       //var json = require('./data.json');
-      window.alert("OK");
-      d3.json("data.json", function(error, data) {
-        var array = getAttr('vinay');
+      window.alert("HEYHO");
+      $(document).ready(function() {
+        d3.json("data.json", function(error, data) {
+        var arr = getAttr('vinay');
         data.forEach(function(d) {
-              for(i=0;i<arrary.length;i++)
-                d.array[i] = d[str(i)];
-          });
+              for(i=0; i < arr.length; i++)
+                d[arr[i]] = d[str(i)];
+        });  
+      });
+      
 
       // var objectArray = [{
       //     "Total": "34",

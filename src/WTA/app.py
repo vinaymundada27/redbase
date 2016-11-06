@@ -25,20 +25,21 @@ def loadattr():
 	with open(file_name) as f:
 		content = f.readlines()
 		content = [x.strip('\n') for x in content]
-	content = content.join(',')
+	content = ','.join(content)
+	print(content)
 	return json.dumps({'names' : content})
 
 @app.route('/response', methods=['POST'])
 def receive():
 	query = request.json['query']
-	
 	#process query
 	result=retrieveQuery(query)
-	tuples=result.split('\n')
+	tuples=result.decode().split('\n')
 	tuples.pop()
-	print "tuples : ", tuples
+	print("tuples : ", tuples)
 
-	dic = map(tupleSplit, tuples)
+	dic = list(map(tupleSplit, tuples))
+	print(dic)
 	
 	# write json to file data.json used by all graphs
 	string = json.dumps(dic)
@@ -68,9 +69,9 @@ def retrieveQuery(query):
 	max_length=102400
 	clientSocket=socket.socket()
 	clientSocket.connect((vinayb_ip,port))
-	clientSocket.send(query)
+	clientSocket.send(query.encode())
 	data=clientSocket.recv(max_length)
-	print data
+	print(data)
 	clientSocket.close
 	return data
 

@@ -1,2 +1,2 @@
-insert into ivana(1, 2);t, id2 int);
+select * from vinay;
 exit;

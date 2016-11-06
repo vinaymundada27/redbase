@@ -53,13 +53,6 @@
        var query = $('#query').val();
        sendQuery(query);
     });
-    $(".tblnames").click(function() {
-       var tabn = $(this).attr('id');
-       tabn = tabn.split('-')[1];
-       var query = "select * from " + tabn + ";";
-       console.log(query);
-       sendQuery(query);
-    });
   });
 
 
