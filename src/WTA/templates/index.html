@@ -47,10 +47,34 @@
     });
   }
 
+  function setTableName(table) {
+    var q = {};
+    var json = {};
+    q['tablename'] = table;
+    $.ajax({
+      url  : '/settablename',
+      data : JSON.stringify(q),
+      contentType : 'application/json',
+      type : 'POST',
+      success : function (r) {
+        console.log('success settable');
+        json = jQuery.parseJSON(r);
+        console.log(json);
+        console.log(r);
+        // var arr = json['names'].split(',');
+        // triggerD3(arr);
+      },
+      error : function(error) {
+         $.notify("SERVER ERROR or INVALID QUERY", { position:"top center" });
+          console.log(error);
+      }
+    });
+  }
+
   function loadTable(table) {
     query = "select * from " + table + ";";
+    setTableName(table);
     sendQuery(query);
-    renderGraph('tab', table);
   }
 
   $(document).ready(function () {

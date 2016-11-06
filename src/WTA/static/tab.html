@@ -62,7 +62,14 @@
       }
 
       // getAttr($(".graphobject").attr('id').split('-')[1]);
-      getAttr('vinay');
+      var tblname = "";
+      var client = new XMLHttpRequest();
+      client.open('GET', '/static/tablename');
+      client.onreadystatechange = function() {
+        tblname = client.responseText;
+      }
+      client.send();
+      getAttr(tblname);
       
       function triggerD3(arr) {
         d3.json("data.json", function(error, data) {

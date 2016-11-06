@@ -17,6 +17,13 @@ def tupleSplit(tuple):
     	count += 1
     return d
 
+@app.route('/settablename', methods=['POST'])
+def settablename():
+	table = request.json['tablename']
+	target = open('static/tablename', 'w')
+	target.write(table)
+	return json.dumps({'result' : 'OK'})
+
 @app.route('/loadattr', methods=['POST'])
 def loadattr():
 	table = request.json['tablename']
