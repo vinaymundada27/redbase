@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <sys/times.h>
 #include <sys/types.h>
+#include <fstream>
 #include <cassert>
 #include <unistd.h>
 #include "redbase.h"
@@ -728,11 +729,32 @@ RC QL_Manager::Insert(const char *relName,
 
   rc = smm.LoadRecord(relName, size, buf);
   if (rc != 0) return rc;
-
+  
   Printer p(attr, attrCount);
   p.PrintHeader(cout);
   p.Print(cout, buf);
   p.PrintFooter(cout);
+  
+  ofstream myfile;
+  char buffer[50];
+  myfile.open("outputquery", ios::out | ios::app);
+  for (int i = 0; i < nValues-1; i++) {
+    if (values[i].type == INT) {
+      // itoa(*(int *)values[i].data, buffer, 10);
+      sprintf(buffer, "%d", *(int *)values[i].data);
+      myfile << buffer << ",";
+    }
+    else if (values[i].type == STRING)
+      myfile << (char *)values[i].data << ",";
+  }
+  if (values[nValues - 1].type == INT) {
+    sprintf(buffer, "%d", *(int *)values[nValues - 1].data);
+    myfile << buffer << std::endl;
+  }
+  else if (values[nValues - 1].type == STRING)
+    myfile << (char *)values[nValues - 1].data << std::endl;
+
+  myfile.close();
 
   delete [] attr;
   delete [] buf;

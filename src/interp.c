@@ -92,6 +92,7 @@ RC interp(NODE *n)
             myfile.open("../WTA/static/files.txt", ios::out | ios::app);
             myfile << n -> u.CREATETABLE.relname << std::endl;
             myfile.close();
+            
             /* Make sure relation name isn't too long */
             if(strlen(n -> u.CREATETABLE.relname) > MAXNAME){
                print_error((char*)"create", E_TOOLONG);

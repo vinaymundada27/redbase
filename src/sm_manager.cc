@@ -109,12 +109,17 @@ RC SM_Manager::CreateTable(const char *relName,
     size += attributes[i].attrLength;
     strcpy (d[i].relName, relName);
     
-    string sta = "../WTA/static/"
+    string sta = "../WTA/static/";
     string filen = sta + string(relName) + string("_attr");
     ofstream myfile;
     myfile.open (filen.c_str(), ios::out | ios::app);
     myfile << string(d[i].attrName) << std::endl;
     myfile.close();
+
+    ofstream myfile2;
+    myfile2.open("outputquery", ios::out | ios::app);
+    myfile2 << string(d[i].attrName) << std::endl;
+    myfile2.close();
 
     if(uniq.find(string(d[i].attrName)) == uniq.end())
       uniq.insert(string(d[i].attrName));

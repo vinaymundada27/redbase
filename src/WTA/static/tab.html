@@ -70,7 +70,7 @@
         var data2 = [];
         data.forEach(function(d) {
             var dd = {};
-            for(i=0; i < arr.length; i++)
+            for(i=0; i < Object.keys(d).length; i++)
               dd[arr[i]] = d[i];
             data2.push(dd);
             // data2 = d["0"];
