@@ -16,6 +16,19 @@
 static int get_id(char *s);   /* defined in scanhelp.c */
 static char *get_qstring(char *qstring, int len);
 
+int my_yyinput(char * buf, int max_size); /* defined in scanhelp.c */
+/* Flex uses the macro YY_INPUT to read input data. YY_INPUT needs to be 
+*  redefined for input redirection. 
+*  For more information please see pages 156-157 of:  
+        Lex & Yacc
+        by John R. Levine, Tony Mason, Doug Brown
+        Reilly & Associates; ISBN: 1565920007
+        (Available in the Stanford MATH/CS Library)
+*/
+#undef YY_INPUT
+#define YY_INPUT(buffer, result, max_size) (result = my_yyinput(buffer, max_size))
+
+
 %}
 letter               [A-Za-z]
 digit                [0-9]
