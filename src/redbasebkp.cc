@@ -24,6 +24,8 @@ static void PrintErrorExit(RC rc) {
   exit(rc);
 }
 
+FILE * inputFilePtr;
+
 //
 // main
 //
@@ -46,12 +48,23 @@ int main(int argc, char *argv[])
   IX_Manager ixm(pfm);
   SM_Manager smm(ixm, rmm);
   QL_Manager qlm(smm, ixm, rmm);
+  
+  
+
+
+  inputFilePtr = fopen("queryfile", "r");
+  if(!inputFilePtr) {
+    fprintf(stderr, "unable to open input file\n");
+    exit(1); 
+  }
+
   // open the database
   if ((rc = smm.OpenDb(dbname)))
     PrintErrorExit(rc);
   // call the parser
   RC parseRC = RBparse(pfm, smm, qlm);
-
+  
+  fclose(inputFilePtr);
   // close the database
   if ((rc = smm.CloseDb()))
     PrintErrorExit(rc);

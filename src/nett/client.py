@@ -1,11 +1,11 @@
 import socket
 
-vinayb_ip = "10.50.41.166"
+vinayb_ip = "127.0.0.1"
 port=8888
 clientSocket=socket.socket()
 clientSocket.connect((vinayb_ip,port))
-
-clientSocket.send('Hey wassup!')
+req = raw_input("Enter query: ");
+clientSocket.send(req)
 data=clientSocket.recv(1024)
 print data
 

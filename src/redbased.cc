@@ -32,7 +32,7 @@ static void PrintErrorExit(RC rc) {
 using boost::asio::ip::tcp;
 const int max_length = 1024;
 
-// FILE * inputFilePtr;
+FILE * inputFilePtr;
 
 void triggerGen(char *dbname)
 {
@@ -44,11 +44,11 @@ void triggerGen(char *dbname)
   QL_Manager qlm(smm, ixm, rmm);
   // open the database
 
-  // inputFilePtr = fopen("queryfile", "r");
-  // if(!inputFilePtr) {
-  //   fprintf(stderr, "unable to open input file\n");
-  //   exit(1); 
-  // }
+  inputFilePtr = fopen("queryfile", "r");
+  if(!inputFilePtr) {
+    fprintf(stderr, "unable to open input file\n");
+    exit(1); 
+  }
 
   if ((rc = smm.OpenDb(dbname)))
     PrintErrorExit(rc);
@@ -56,7 +56,7 @@ void triggerGen(char *dbname)
   // freopen("queryfile", "r", stdin);
   // call the parser
   RC parseRC = RBparse(pfm, smm, qlm);
-  // fclose(inputFilePtr);
+  fclose(inputFilePtr);
   // close the database
   if ((rc = smm.CloseDb()))
     PrintErrorExit(rc);
