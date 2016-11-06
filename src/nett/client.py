@@ -6,7 +6,7 @@ clientSocket=socket.socket()
 clientSocket.connect((vinayb_ip,port))
 req = raw_input("Enter query: ");
 clientSocket.send(req)
-data=clientSocket.recv(1024)
+data=clientSocket.recv(102400)
 print data
 
 clientSocket.close

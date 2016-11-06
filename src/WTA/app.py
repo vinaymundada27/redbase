@@ -16,7 +16,7 @@ def receive():
 	result=retrieveQuery(query)
 
 	#return json
-	return json.dumps({'status':'OK','query':query});
+	return json.dumps({'status':'OK','query':query,'result':result});
 
 @app.route('/loadjson')
 def sendJson():
@@ -42,21 +42,15 @@ def getResults():
 # 	return send_from_directory('/', path)
 
 def retrieveQuery(query):
-	vinayb_ip = "10.50.42.99"
-	chetan_ip = ""
-	port=4009
-	max_length=1024
-	
-	try:
-		clientSocket=socket.socket()
-		clientSocket.connect((vinayb_ip,port))
-		data=clientSocket.recv(max_length)
-		clientSocket.close	
-		return data
-	except Exception, e:
-		raise e
-	finally:
-		pass
+	vinayb_ip = "127.0.0.1"
+	port=8888
+	clientSocket=socket.socket()
+	clientSocket.connect((vinayb_ip,port))
+	clientSocket.send(query)
+	data=clientSocket.recv(102400)
+	print data
+	clientSocket.close
+	return data
 
 if __name__ =="__main__":
 	app.run()

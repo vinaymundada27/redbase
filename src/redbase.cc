@@ -55,6 +55,9 @@ void triggerGen(char *dbname)
   
   // freopen("queryfile", "r", stdin);
   // call the parser
+  ofstream ofs;
+  ofs.open("outputquery", std::ofstream::out | std::ofstream::trunc);
+  ofs.close();
   RC parseRC = RBparse(pfm, smm, qlm);
   fclose(inputFilePtr);
   // close the database
@@ -71,8 +74,26 @@ void write_to_file(char *fileName, char data[], size_t length)
 {
   ofstream myfile;
   myfile.open (fileName);
-  myfile << data << std::endl;
+  myfile << data << std::endl << "exit;" << std::endl;
   myfile.close();
+}
+
+void load_from_file(char *filename, char data[], int &length)
+{
+  ifstream file(filename, std::ios::binary | std::ios::ate);
+  streamsize size = file.tellg();
+  file.seekg(0, std::ios::beg);
+
+  if (file.read(data, size))
+  {
+      /* worked! */
+  }
+  length = (int) size;
+  file.close();
+
+  // std::ifstream t(filename);
+  // std::stringstream buffer;
+  // buffer << t.rdbuf();
 }
 
 void session(tcp::socket sock)
@@ -82,6 +103,8 @@ void session(tcp::socket sock)
     for (;;)
     {
       char data[max_length];
+      char repldata[max_length*10];
+      int repl_length;
 
       boost::system::error_code error;
       size_t length = sock.read_some(boost::asio::buffer(data), error);
@@ -92,9 +115,11 @@ void session(tcp::socket sock)
       
       char *filename = "queryfile";
       char *dbn = "test";
+      char *outfile = "outputquery";
       write_to_file(filename, data, length);
       triggerGen(dbn);
-      boost::asio::write(sock, boost::asio::buffer(data, length));
+      load_from_file("test/outputquery", repldata, repl_length);
+      boost::asio::write(sock, boost::asio::buffer(repldata, repl_length));
     }
   }
   catch (std::exception& e)
