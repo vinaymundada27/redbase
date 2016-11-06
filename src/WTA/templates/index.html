@@ -34,9 +34,10 @@
     function sendQuery(){
 
     var query=document.getElementById("query").value;
-
+  
     var query = $('#query').val();
     var q = { 'query': query };
+    document.getElementById("query").value="";
 
     $.ajax({
       url  : '/response',
@@ -44,7 +45,8 @@
       contentType : 'application/json',
       type : 'POST',
       success : function (r) {
-        alert(r);
+        var json=jQuery.parseJSON(r);  
+        alert(json['result']);
         console.log(r);
       },
       error : function(error) {
@@ -150,7 +152,7 @@
       </div>
     </div>
 
-  </div>
+  
   <div class="col-sm-9"
   margin-top: 15px;
   margin-bottom: "15px;">
@@ -177,6 +179,6 @@
 
     </div>
   </div>
-</div>
+  </div>
 </body>
 </html>
