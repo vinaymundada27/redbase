@@ -1,2 +1,2 @@
-select * from vinay;
+select name from vinay;
 exit;

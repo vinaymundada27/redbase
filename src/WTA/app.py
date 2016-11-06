@@ -17,6 +17,11 @@ def tupleSplit(tuple):
     	count += 1
     return d
 
+@app.route('/tab', methods=['GET', 'POST'])
+def tab():
+	return render_template('tab.html')
+
+
 @app.route('/loadattr', methods=['POST'])
 def loadattr():
 	table = request.json['tablename']

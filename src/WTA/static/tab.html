@@ -33,15 +33,11 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src = "require.js"></script>
+ <script>
 
-</head>
-
-<body>
-  HI
-  <div id = 'table' class="block center"></div>
-  <script>
-
+      ATTR_NAMES = []
       function getAttr(table){
+        console.log("I was called");
         var q = {};
         var json = {};
         q['tablename'] = table;
@@ -55,62 +51,82 @@
             json = jQuery.parseJSON(r);
             console.log(json);
             console.log(r);
+            var arr = json['names'].split(',');
+            triggerD3(arr);
           },
           error : function(error) {
              $.notify("SERVER ERROR or INVALID QUERY", { position:"top center" });
               console.log(error);
           }
         });
-        console.log(json);
-        return json['names'];
       }
+
+      getAttr('vinay');
+      
+      function triggerD3(arr) {
+        d3.json("data.json", function(error, data) {
+        console.log("USHI!");
+        console.log(arr);
+        var data2 = [];
+        data.forEach(function(d) {
+            var dd = {};
+            for(i=0; i < arr.length; i++)
+              dd[arr[i]] = d[i];
+            data2.push(dd);
+            // data2 = d["0"];
+            // data2.Y = d["1"];
+        });
+
+        console.log(data);
+        
+
+        // var objectArray = [{
+        //     "Total": "34",
+        //     "Version": "1.0.4",
+        //     }, {
+        //     "Total": "67",
+        //     "Version": "1.1.0",
+        //
+        // }];
+        //
+        // //Example data, Array
+        // var stringArray = ["New York", "Berlin", "Paris", "Marrakech", "Moscow"];
+        //
+        // //Example data, nested Object. This data will create nested table also.
+        // var nestedTable = [{
+        //     key1: "val1",
+        //     key2: "val2",
+        //     key3: {
+        //         tableId: "tblIdNested1",
+        //         tableClassName: "clsNested",
+        //         linkText: "Download",
+        //         data: [{
+        //             subkey1: "subval1",
+        //             subkey2: "subval2",
+        //             subkey3: "subval3"
+        //         }]
+        //     }
+        // }];
+
+        var jsonHtmlTable = ConvertJsonToTable(data2, 'jsonTable', null, 'Download');
+        document.getElementById('table').innerHTML = jsonHtmlTable;
+        //window.alert(jsonHtmlTable)
+
+        });
+
+      }
+
       //Example data, Object
       //var json = require('./data.json');
+      console.log(ATTR_NAMES);
       window.alert("HEYHO");
-      $(document).ready(function() {
-        d3.json("data.json", function(error, data) {
-        var arr = getAttr('vinay');
-        data.forEach(function(d) {
-              for(i=0; i < arr.length; i++)
-                d[arr[i]] = d[str(i)];
-        });  
-      });
       
-
-      // var objectArray = [{
-      //     "Total": "34",
-      //     "Version": "1.0.4",
-      //     }, {
-      //     "Total": "67",
-      //     "Version": "1.1.0",
-      //
-      // }];
-      //
-      // //Example data, Array
-      // var stringArray = ["New York", "Berlin", "Paris", "Marrakech", "Moscow"];
-      //
-      // //Example data, nested Object. This data will create nested table also.
-      // var nestedTable = [{
-      //     key1: "val1",
-      //     key2: "val2",
-      //     key3: {
-      //         tableId: "tblIdNested1",
-      //         tableClassName: "clsNested",
-      //         linkText: "Download",
-      //         data: [{
-      //             subkey1: "subval1",
-      //             subkey2: "subval2",
-      //             subkey3: "subval3"
-      //         }]
-      //     }
-      // }];
-
-      var jsonHtmlTable = ConvertJsonToTable(data, 'jsonTable', null, 'Download');
-      document.getElementById('table').innerHTML = jsonHtmlTable;
-      //window.alert(jsonHtmlTable)
-
-    });
   </script>
+</head>
+
+<body>
+  <div id = 'table' class="block center"></div>
+ 
 </body>
 
 
