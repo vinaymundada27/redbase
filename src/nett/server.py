@@ -3,9 +3,9 @@ import sys
 
 def spawnServer():
 	serverSocket = socket.socket()
-	port = 8888
-	host="127.0.0.1"
-	serverSocket.bind((host,port));
+	port = 8899
+	host="10.50.42.93"
+	serverSocket.bind((host,port))
 	serverSocket.listen(5)
 	print 'Server listening...'
 	max_length=1024

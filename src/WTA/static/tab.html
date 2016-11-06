@@ -4,25 +4,39 @@
 
 <head>
   <style>
-  table th {
-    width: 10px;
+  div {
+  height: 1000px;
+  width: 100px;
+  }
+  #table {
+    text-align:center;
+    height:400px;
+    width:600px;
 }
-</style>
+.block {
+    height:100px;
+    width:200px;
+    text-align:left;
+}
+.center {
+    margin:auto;
+
+}
+  </style>
 <title>Title</title>
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script type = "text/javascript" src = "json-to-table.js"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 </head>
 
 <body>
-  <h1>Hi there!</h1>
-  <div id = 'table'></div>
+  <div id = 'table' class="block center"></div>
   <script>
       //Example data, Object
       //var json = require('./data.json');
@@ -63,7 +77,7 @@
 
       var jsonHtmlTable = ConvertJsonToTable(data, 'jsonTable', null, 'Download');
       document.getElementById('table').innerHTML = jsonHtmlTable;
-      window.alert(jsonHtmlTable)
+      //window.alert(jsonHtmlTable)
 
     });
   </script>
