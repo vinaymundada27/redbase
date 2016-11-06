@@ -1,6 +1,6 @@
 /**
  * JavaScript format string function
- * 
+ *
  */
 String.prototype.format = function()
 {
@@ -23,7 +23,7 @@ String.prototype.format = function()
  * JSON data samples that should be parsed and then can be converted to an HTML table
  *     var objectArray = '[{"Total":"34","Version":"1.0.4","Office":"New York"},{"Total":"67","Version":"1.1.0","Office":"Paris"}]';
  *     var stringArray = '["New York","Berlin","Paris","Marrakech","Moscow"]';
- *     var nestedTable = '[{ key1: "val1", key2: "val2", key3: { tableId: "tblIdNested1", tableClassName: "clsNested", linkText: "Download", data: [{ subkey1: "subval1", subkey2: "subval2", subkey3: "subval3" }] } }]'; 
+ *     var nestedTable = '[{ key1: "val1", key2: "val2", key3: { tableId: "tblIdNested1", tableClassName: "clsNested", linkText: "Download", data: [{ subkey1: "subval1", subkey2: "subval2", subkey3: "subval3" }] } }]';
  *
  * Code sample to create a HTML table Javascript String
  *     var jsonHtmlTable = ConvertJsonToTable(eval(dataString), 'jsonTable', null, 'Download');
@@ -35,16 +35,16 @@ String.prototype.format = function()
  *  - 'Download' text will be displayed instead of the link itself
  *
  * @author Afshin Mehrabani <afshin dot meh at gmail dot com>
- * 
+ *
  * @class ConvertJsonToTable
- * 
+ *
  * @method ConvertJsonToTable
- * 
+ *
  * @param parsedJson object Parsed JSON data
- * @param tableId string Optional table id 
+ * @param tableId string Optional table id
  * @param tableClassName string Optional table css class name
  * @param linkText string Optional text replacement for link pattern
- *  
+ *
  * @return string Converted JSON to HTML table
  */
 function ConvertJsonToTable(parsedJson, tableId, tableClassName, linkText)
@@ -54,14 +54,14 @@ function ConvertJsonToTable(parsedJson, tableId, tableClassName, linkText)
     var link = linkText ? '<a href="{0}">' + linkText + '</a>' :
                           '<a href="{0}">{0}</a>';
 
-    //Pattern for table                          
+    //Pattern for table
     var idMarkup = tableId ? ' id="' + tableId + '"' :
                              '';
 
     var classMarkup = tableClassName ? ' class="' + tableClassName + '"' :
                                        '';
 
-    var tbl = '<table border="1" cellpadding="1" cellspacing="1"' + idMarkup + classMarkup + '>{0}{1}</table>';
+    var tbl = '<table class="table table-nonfluid table-striped table-hover" border="1" cellpadding="1" cellspacing="1"' + idMarkup + classMarkup + '>{0}{1}</table>';
 
     //Patterns for table content
     var th = '<thead>{0}</thead>';
@@ -94,7 +94,7 @@ function ConvertJsonToTable(parsedJson, tableId, tableClassName, linkText)
             }
         }
         th = th.format(tr.format(thCon));
-        
+
         // Create table rows from Json data
         if(isStringArray)
         {
@@ -111,7 +111,7 @@ function ConvertJsonToTable(parsedJson, tableId, tableClassName, linkText)
             {
                 var urlRegExp = new RegExp(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig);
                 var javascriptRegExp = new RegExp(/(^javascript:[\s\S]*;$)/ig);
-                
+
                 for (i = 0; i < parsedJson.length; i++)
                 {
                     for (j = 0; j < headers.length; j++)
@@ -130,7 +130,7 @@ function ConvertJsonToTable(parsedJson, tableId, tableClassName, linkText)
                             	} else {
                             		tbCon += tdRow.format(value);
                             	}
-                                
+
                             } else {    // If value == null we format it like PhpMyAdmin NULL values
                                 tbCon += tdRow.format(italic.format(value).toUpperCase());
                             }
@@ -171,7 +171,7 @@ function array_keys(input, search_value, argStrict)
     if (input && typeof input === 'object' && input.change_key_case) { // Duck-type check for our own array()-created PHPJS_Array
         return input.keys(search_value, argStrict);
     }
- 
+
     for (key in input)
     {
         if (input.hasOwnProperty(key))
@@ -183,7 +183,7 @@ function array_keys(input, search_value, argStrict)
                     include = false;
                 else if (input[key] != search_value)
                     include = false;
-            } 
+            }
             if (include)
                 tmp_arr[tmp_arr.length] = key;
         }
