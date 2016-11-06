@@ -21,8 +21,8 @@
     d3.json("data.json", function(error, data) {
 
         data.forEach(function(d) {
-            d.X = d.X;
-            d.Y = +d.Y;
+            d.X = d["1"];
+            d.Y = +d["0"];
         });
 
     var width = 1600,

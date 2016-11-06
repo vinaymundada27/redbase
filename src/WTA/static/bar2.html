@@ -82,8 +82,8 @@ var svg = d3.select("body").append("svg")
 d3.json("data.json", function(error, data) {
 
     data.forEach(function(d) {
-        d.X = d.X;
-        d.Y = +d.Y;
+        d.X = d["1"];
+        d.Y = +d["0"];
     });
 
 	var div = d3.select("body").append("div").attr("class", "toolTip");
