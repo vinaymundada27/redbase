@@ -19,17 +19,7 @@
     document.getElementById('graph').innerHTML=str;
   }
 
-    function sendQuery(){
-    var query=document.getElementById("query").value;
-  
-    $.notify("SUCCESS!", "success",
-      {position : "left"});
-
-    $.notify(
-  "I'm to the right of this box", 
-  { position:"center" }
-);
-    // $.notify("Do not press this button", "info");
+  function sendQuery(){
     var query = $('#query').val();
     var q = { 'query': query };
     document.getElementById("query").value="";
@@ -41,12 +31,12 @@
       type : 'POST',
       success : function (r) {
         var json=jQuery.parseJSON(r);  
-        $.notify("Access granted", "success");
+        $.notify("SUCCESS", "success");
         console.log(r);
       },
       error : function(error) {
-        $.notify("SERVER ERROR!", "error");
-        console.log(error);
+         $.notify("SERVER ERROR!", { position:"top center" });
+          console.log(error);
       }
     });
   }
