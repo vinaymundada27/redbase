@@ -14,22 +14,9 @@
 
   function renderGraph(type)
   {
-    var str = "<object type=\"text/html\" data=\"static/" + type +".html\" style=\"width:100%; height:500px; margin:2%; \"></object>"
+    var str = "<object type=\"text/html\" data=\"static/" + type + ".html\" style=\"width:100%; height:500px; margin:2%; \"></object>"
     document.getElementById('graph').innerHTML=str;
   }
-
-    var client = new XMLHttpRequest();
-    client.open('GET', '/static/files.txt');
-    client.onreadystatechange = function() {
-        t = client.response
-        t = t.split('\n');
-        var listbox = "<br /><li><font size=5><center>Tables</center></font></li><br />";
-        for(i=0;i<t.length;i++){
-          listbox +='<li><a href = "#"><font size=4><center>'+t[i]+'</center></font></a></li>';
-        }
-        document.getElementById('lb').innerHTML=listbox;
-    }
-    client.send();
 
     function sendQuery(){
 
@@ -54,9 +41,20 @@
     });
   }
 
+  // $(document).ready(function() {
+  //   $(".container").load("static/home4.html");
+  //
+  // function loadPage(page){
+  //   $(".container").load("static/"+page+".html");
+  // }
+
+
 </script>
 
 <style type="text/css">
+
+  body {  background-image: url(/static/images/red.jpg); }
+
   html, body {
     height:100%;
   }
@@ -103,7 +101,7 @@
 <body>
 
 <div class="bs-example">
-    <nav role="navigation" class="navbar navbar-inverse">
+    <nav role="navigation" class="navbar navbar-inverse ">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
             <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
@@ -117,63 +115,129 @@
         <!-- Collection of nav links, forms, and other content for toggling -->
         <div id="navbarCollapse" class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li class="active"><a href="#">Dashboard</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Project Members</a></li>
+                <li class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Dashboard</a></li>
+                <li><a href="#about" aria-controls="about" role="tab" data-toggle="tab">About</a></li>
+                <li><a href="#members" aria-controls="members" role="tab" data-toggle="tab">Project Members</a></li>
             </ul>
 
         </div>
     </nav>
 </div>
 
-<div class="container">
-<div class="row my-row">
-  <div class="col-sm-3">
-    <div class="sidebar-nav">
-      <div class="navbar navbar-default" role="navigation">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <span class="visible-xs navbar-brand">Sidebar menu</span>
+<div class="tab-content">
+  <div role = "tabpanel" class = "tab-pane active" id="home">
+    <div class = "container">
+      <script>
+      var client = new XMLHttpRequest();
+      client.open('GET', '/static/files.txt');
+      client.onreadystatechange = function() {
+          t = client.response
+          t = t.split('\n');
+          var listbox = "<br /><li><font size=5><center>Tables</center></font></li><br />";
+          for(i=0;i<t.length;i++){
+            listbox +='<li><a href = "#"><font size=4><center>'+t[i]+'</center></font></a></li>';
+          }
+          document.getElementById('lb').innerHTML=listbox;
+        }
+        client.send();
+      </script>
+
+    <div class="row my-row">
+      <div class="col-sm-3">
+        <div class="sidebar-nav">
+          <div class="navbar navbar-default" role="navigation">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <span class="visible-xs navbar-brand">Sidebar menu</span>
+            </div>
+            <div class="navbar-collapse collapse sidebar-navbar-collapse">
+              <ul class="nav navbar-nav" id = "lb" style = "height:500px">
+                <br />
+                <br />
+              </ul>
+            </div><!--/.nav-collapse -->
+          </div>
         </div>
-        <div class="navbar-collapse collapse sidebar-navbar-collapse">
-          <ul class="nav navbar-nav" id = "lb" style = "height:500px">
-            <br />
-            <br />
-          </ul>
-        </div><!--/.nav-collapse -->
+      </div>
+
+      <div class="col-sm-9"
+      margin-top: 15px;
+      margin-bottom: "15px;">
+      <div class="input-group">
+        <input type="text" class="form-control" id="query">
+          <span class="input-group-btn">
+              <button type = "button" class = "btn btn-danger" onClick = "sendQuery()">Go</button>
+              <button type = "button" class = "btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle = "dropdown">
+                Visualize
+              <span class = "caret"></span>
+              </button>
+
+            <ul class = "dropdown-menu dropdown-menu-right" role = "menu">
+              <button class="btn btn-secondary" type="button" style="width:100%" onClick = "renderGraph('tab')">Table</button><br />
+              <button class="btn btn-secondary" type="button" style="width:100%" onClick = "renderGraph('bar')">Bar Graph</button><br />
+              <button class="btn btn-secondary" type="button" style="width:100%" onClick = "renderGraph('bar2')">Horizontal Bar Graph</button><br />
+              <button class="btn btn-secondary" type="button" style="width:100%" onClick = "renderGraph('line')">Line Graph</button><br />
+              <button class="btn btn-secondary" type="button" style="width:100%" onClick = "renderGraph('pie')">Pie Chart</button><br />
+            </ul>
+            </span>
+          </div>
+        <div id = "graph"> </div>
+
       </div>
     </div>
-  </div>
-  <div class="col-sm-9"
-  margin-top: 15px;
-  margin-bottom: "15px;">
-  <div class="input-group">
-    <input type="text" class="form-control" id="query">
-      <span class="input-group-btn">
-          <button type = "button" class = "btn btn-danger" onClick = "sendQuery()">Go</button>
-          <button type = "button" class = "btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle = "dropdown">
-            Visualize
-          <span class = "caret"></span>
-          </button>
-
-        <ul class = "dropdown-menu dropdown-menu-right" role = "menu">
-          <button class="btn btn-secondary" type="button" style="width:100%" onClick = "renderGraph('tab')">Table</button><br />
-          <button class="btn btn-secondary" type="button" style="width:100%" onClick = "renderGraph('bar2')">Bar Graph</button><br />
-          <button class="btn btn-secondary" type="button" style="width:100%" onClick = "renderGraph('bar')">Horizontal Bar Graph</button><br />
-          <button class="btn btn-secondary" type="button" style="width:100%" onClick = "renderGraph('line')">Line Graph</button><br />
-          <button class="btn btn-secondary" type="button" style="width:100%" onClick = "renderGraph('pie')">Pie Chart</button><br />
-        </ul>
-        </span>
-      </div>
-    <div id = "graph"> </div>
 
   </div>
-</div>
-</div>
+  </div>
+
+  <div role = "tabpanel" class = "tab-pane" id="about">
+    <h1>About</h1>
+  </div>
+  <div role = "tabpanel" class = "tab-pane" id="members">
+    <div class="container">
+  		<div class="row">
+  			<div class="col-sm-4">
+  				<div class="card" style="width: 18rem;">
+  			  		<img class="card-img-top" src="static/images/img1.jpg" alt="Card image cap" style="width:200px;height:180px;">
+  			  		<div class="card-block">
+  				    	<h4 class="card-title">VINAY MUNDADA</h4>
+  				    	<p class="card-text">14IT124<br /> NITK Surathkal</p>
+  				    	<a href="#" class="btn btn-primary">Go somewhere</a>
+  		  			</div>
+  				</div>
+  			</div>
+
+  			<div class="col-sm-4">
+  				<div class="card" style="width: 18rem;">
+  			  		<img class="card-img-top" src="static/images/img1.jpg" alt="Card image cap" style="width:200px;height:180px;">
+  			  		<div class="card-block">
+  				    	<h4 class="card-title">CHETAN JAYDEEP</h4>
+  				    	<p class="card-text">14IT235<br /> NITK Surathkal</p>
+  				    	<a href="#" class="btn btn-primary">Go somewhere</a>
+  		  			</div>
+  				</div>
+  			</div>
+
+  		  	<div class="col-sm-4">
+  				<div class="card" style="width: 18rem;">
+  			  		<img class="card-img-top" src="static/images/img1.jpg" alt="Card image cap" style="width:200px;height:180px;">
+  			  		<div class="card-block">
+  				    	<h4 class="card-title">VINAY BHAT</h4>
+  				    	<p class="card-text">14IT248<br /> NITK Surathkal</p>
+  				    	<a href="#" class="btn btn-primary">Go somewhere</a>
+  		  			</div>
+  				</div>
+  			</div>
+
+  		</div>
+  	</div>
+
+    </div>
+  </div>
+
 </body>
 </html>
