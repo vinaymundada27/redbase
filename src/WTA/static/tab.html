@@ -47,35 +47,35 @@
               d.Y = +d.Y;
           });
 
-      var objectArray = [{
-          "Total": "34",
-          "Version": "1.0.4",
-          }, {
-          "Total": "67",
-          "Version": "1.1.0",
+      // var objectArray = [{
+      //     "Total": "34",
+      //     "Version": "1.0.4",
+      //     }, {
+      //     "Total": "67",
+      //     "Version": "1.1.0",
+      //
+      // }];
+      //
+      // //Example data, Array
+      // var stringArray = ["New York", "Berlin", "Paris", "Marrakech", "Moscow"];
+      //
+      // //Example data, nested Object. This data will create nested table also.
+      // var nestedTable = [{
+      //     key1: "val1",
+      //     key2: "val2",
+      //     key3: {
+      //         tableId: "tblIdNested1",
+      //         tableClassName: "clsNested",
+      //         linkText: "Download",
+      //         data: [{
+      //             subkey1: "subval1",
+      //             subkey2: "subval2",
+      //             subkey3: "subval3"
+      //         }]
+      //     }
+      // }];
 
-      }];
-
-      //Example data, Array
-      var stringArray = ["New York", "Berlin", "Paris", "Marrakech", "Moscow"];
-
-      //Example data, nested Object. This data will create nested table also.
-      var nestedTable = [{
-          key1: "val1",
-          key2: "val2",
-          key3: {
-              tableId: "tblIdNested1",
-              tableClassName: "clsNested",
-              linkText: "Download",
-              data: [{
-                  subkey1: "subval1",
-                  subkey2: "subval2",
-                  subkey3: "subval3"
-              }]
-          }
-      }];
-
-      var jsonHtmlTable = ConvertJsonToTable(stringArray, 'jsonTable', null, 'Download');
+      var jsonHtmlTable = ConvertJsonToTable(data, 'jsonTable', null, 'Download');
       document.getElementById('table').innerHTML = jsonHtmlTable;
       //window.alert(jsonHtmlTable)
 

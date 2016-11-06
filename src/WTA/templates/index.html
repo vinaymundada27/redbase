@@ -20,10 +20,8 @@
     document.getElementById('graph').innerHTML=str;
   }
 
-    function sendQuery(){
+  function sendQuery(query){
 
-    // var query=document.getElementById("query").value;
-    var query = $('#query').val();
     var q = { 'query': query };
     document.getElementById("query").value="";
 
@@ -33,7 +31,7 @@
       contentType : 'application/json',
       type : 'POST',
       success : function (r) {
-        var json=jQuery.parseJSON(r);  
+        var json=jQuery.parseJSON(r);
         $.notify("SUCCESS", "success");
         console.log(r);
       },
@@ -42,7 +40,28 @@
           console.log(error);
       }
     });
+    renderGraph('tab');
   }
+
+  function loadTable(table) {
+    query = "select * from " + table + ";";
+    sendQuery(query);
+  }
+
+  $(document).ready(function () {
+    $("#gobutton").click(function(){
+       var query = $('#query').val();
+       sendQuery(query);
+    });
+    $(".tblnames").click(function() {
+       var tabn = $(this).attr('id');
+       tabn = tabn.split('-')[1];
+       var query = "select * from " + tabn + ";";
+       console.log(query);
+       sendQuery(query);
+    });
+  });
+
 
   // $(document).ready(function() {
   //   $(".container").load("static/home4.html");
@@ -134,11 +153,13 @@
       client.onreadystatechange = function() {
           t = client.response
           t = t.split('\n');
-          var listbox = "<br /><li><font size=5><center>Tables</center></font></li><br />";
-          for(i=0;i<t.length;i++){
-            listbox +='<li><a href = "#"><font size=4><center>'+t[i]+'</center></font></a></li>';
+          var listbox = "<br /><li><font size=5><center>Relations</center></font></li><br />";
+          for(i=0;i<t.length-1;i++){
+            // listbox +="<li><a href = \"#\" id=\"link-" + t[i] + "\" class=\"tblnames\"><font size=4><center>"+t[i]+"</center><font><a></li>";
+            listbox+='<center><a href="#" class="btn btn-link" role="button" onClick=\'' + 'loadTable("' + t[i] + '")\'>' + t[i] + '</a></center>';
           }
           document.getElementById('lb').innerHTML=listbox;
+          console.log(listbox);
         }
         client.send();
       </script>
@@ -172,7 +193,7 @@
       <div class="input-group">
         <input type="text" class="form-control" id="query">
           <span class="input-group-btn">
-              <button type = "button" class = "btn btn-danger" onClick = "sendQuery()">Go</button>
+              <button type = "button" class = "btn btn-danger" id="gobutton">Go</button>
               <button type = "button" class = "btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle = "dropdown">
                 Visualize
               <span class = "caret"></span>
