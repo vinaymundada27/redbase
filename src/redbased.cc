@@ -128,15 +128,24 @@ int main(int argc, char *argv[])
     exit(1);
   }
 
-  try
-  {
-    boost::asio::io_service io_service;
+  char *filename = "queryfile";
+  char *data = "select * from vinay;";
+  char *dbn = "test";
+  size_t length = strlen(data);
+  // write_to_file(filename, data, length);
+  triggerGen(dbn);
+  // char *dbname = argv[1];
 
-    server(io_service, 8888);
-  }
-  catch (std::exception& e)
-  {
-    std::cerr << "Exception: " << e.what() << "\n";
-  }
+  // initialize RedBase components
+  // try
+  // {
+  //   boost::asio::io_service io_service;
+
+  //   server(io_service, std::atoi(argv[1]));
+  // }
+  // catch (std::exception& e)
+  // {
+  //   std::cerr << "Exception: " << e.what() << "\n";
+  // }
   return 0;
 }
