@@ -32,19 +32,42 @@
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src = "require.js"></script>
 
 </head>
 
 <body>
   <div id = 'table' class="block center"></div>
   <script>
+
+      function getAttr(table){
+        var q = {};
+        var json = {};
+        q['tablename'] = table;
+        $.ajax({
+          url  : '/loadattr',
+          data : JSON.stringify(q),
+          contentType : 'application/json',
+          type : 'POST',
+          success : function (r) {
+            json=jQuery.parseJSON(r);
+            $.notify("ATTR LOADED", "success");
+            console.log(r);
+          },
+          error : function(error) {
+             $.notify("SERVER ERROR or INVALID QUERY", { position:"top center" });
+              console.log(error);
+          }
+        });
+        return json['names'].split(',');
+      }
       //Example data, Object
       //var json = require('./data.json');
       d3.json("data.json", function(error, data) {
-
-          data.forEach(function(d) {
-              d.X = d.X;
-              d.Y = +d.Y;
+        var array = getAttr('vinay');
+        data.forEach(function(d) {
+              for(i=0;i<arrary.length;i++)
+                d.array[i] = d[str(i)];
           });
 
       // var objectArray = [{
