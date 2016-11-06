@@ -48,7 +48,7 @@ def retrieveQuery(query):
 	clientSocket.connect((vinayb_ip,port))
 	clientSocket.send(query)
 	data=clientSocket.recv(102400)
-	print data
+	print(data)
 	clientSocket.close
 	return data
 
