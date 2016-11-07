@@ -1,18 +1,11 @@
 //
 // File:        ix_testshell.cc
 // Description: Test IX component
-// Authors:     Jan Jannink
-//              Dallan Quass (quass@cs.stanford.edu)
 //
 // This test shell contains a number of functions that will be useful in
 // testing your IX component code.  In addition, a couple of sample
 // tests are provided.  The tests are by no means comprehensive, you are
 // expected to devise your own tests to test your code.
-//
-// 1997:  Tester has been modified to reflect the change in the 1997
-// interface.
-// 2000:  Tester has been modified to reflect the change in the 2000
-// interface.
 
 #include <cstdio>
 #include <iostream>

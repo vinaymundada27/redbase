@@ -1,9 +1,5 @@
 /*
  * interp.c: interpreter for RQL
- *
- * Authors: Dallan Quass (quass@cs.stanford.edu)
- *          Jan Jannink
- * originally by: Mark McAuliffe, University of Wisconsin - Madison, 1991
  */
 
 #include <stdio.h>

@@ -1,9 +1,3 @@
-//
-// File:        SM component stubs
-// Description: Print parameters of all SM_Manager methods
-// Authors:     Dallan Quass (quass@cs.stanford.edu)
-//
-
 #include <cstdio>
 #include <iostream>
 #include <fstream>
@@ -863,8 +857,6 @@ RC SM_Manager::Print(const char *relName)
       ofstream file("TESTYTEST.txt", ios::out | ios::binary | ios::app);
       file.write(data, 1000000);
       file.close();
-      cout << data;
-      cout << "REACHED HERE PRINT";
       p.Print(cout, data);
     }
   }
@@ -949,8 +941,6 @@ RC SM_Manager::Help()
       ofstream file("TESTYTEST.txt", ios::out | ios::binary | ios::app);
       file.write(data, 1000000);
       file.close();
-      cout << data;
-      cout << "REACHED HERE HELP";
       p.Print(cout, data);
     }
   }
@@ -1016,8 +1006,6 @@ RC SM_Manager::Help(const char *relName)
       ofstream file("TESTYTEST.txt", ios::out | ios::binary | ios::app);
       file.write(data, 1000000);
       file.close();
-      cout << data;
-      cout << "REACHED HERE HELP2";
       p.Print(cout, data);
     }
   }

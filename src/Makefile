@@ -1,9 +1,3 @@
-#
-# Makefile for the RedBase project.
-#
-# Author: Hyunjung Park (hyunjung@cs.stanford.edu)
-#
-
 
 #
 # Global variables

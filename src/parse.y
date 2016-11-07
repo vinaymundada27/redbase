@@ -2,17 +2,7 @@
 /*
  * parser.y: yacc specification for RQL
  *
- * Authors: Dallan Quass
- *          Jan Jannink
- *          Jason McHugh
  *
- * originally by: Mark McAuliffe, University of Wisconsin - Madison, 1991
- *
- * 1997: Added "print buffer", "print io", "reset io" and the "*" in
- * SFW Query.
- * 1998: Added "reset buffer", "resize buffer [int]", "queryplans on",
- * and "queryplans off".
- * 2000: Added "const" to yyerror-header
  *
  */
 

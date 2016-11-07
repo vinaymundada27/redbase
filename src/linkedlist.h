@@ -2,11 +2,6 @@
 // linkedlist.h
 //
 
-// Simple template to track a linked list.  This is a doubly linked list
-// written by the 2000-TA Andre Bergholz
-// who has spent some effort making the access methods more efficient
-// for very long lists.
-
 // This linked list is base 0
 // In order to do a traversal through all of the elements:
 //   for (int i=0; i<list.GetLength(); i++) {

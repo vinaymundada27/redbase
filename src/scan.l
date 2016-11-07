@@ -2,10 +2,6 @@
 /*
  * scan.l: lex spec for RQL
  *
- * Authors: Dallan Quass
- *          Jan Jannink
- *
- * originally by: Mark McAuliffe, University of Wisconsin - Madison, 1991
  */
 
 #include <string.h>

@@ -352,7 +352,7 @@ void Printer::Print(std::ostream &c, const Tuple& t)
   const char * data;
   t.GetData(data);
 
-  cout << "PRINT TUPLE : " << t << endl;
+  // cout << "PRINT TUPLE : " << t << endl;
   //get the tuples in ascii form
   string ascii;
   t.GetDataInAscii(ascii);

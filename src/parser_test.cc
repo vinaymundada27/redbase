@@ -1,10 +1,6 @@
 //
 // File:        parser_test.cc
 // Description: Test the parser
-// Authors:     Dallan Quass (quass@cs.stanford.edu)
-//              Jason McHugh (mchughj@cs.stanford.edu)
-//
-// 1997: Changes for the statistics manager
 //
 
 #include <cstdio>
