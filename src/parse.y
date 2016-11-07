@@ -724,13 +724,11 @@ RC RBparse(PF_Manager &pfm, SM_Manager &smm, QL_Manager &qlm)
       /* Reset parser and scanner for a new query */
       new_query();
 
-#if 0
       /* Print a prompt */
       cout << PROMPT;
 
       /* Get the prompt to actually show up on the screen */
       cout.flush(); 
-#endif
 
       /* If a query was successfully read, interpret it */
       if(yyparse() == 0 && parse_tree != NULL)
