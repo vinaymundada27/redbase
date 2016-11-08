@@ -1,6 +1,6 @@
 %{
 /*
- * parser.y: yacc specification for RQL
+ * parser.y: yacc specification
  *
  */
 
@@ -19,22 +19,9 @@
 
 using namespace std;
 
-  // Added by Wendy Tobagus
 #ifndef yyrestart
 void yyrestart(FILE*);
 #endif
-
-// The PF_STATS indicates that we will be tracking statistics for the PF
-// Layer.  The Manager is defined within pf_buffermgr.cc.  
-// We include it within the parser so that a system command can display
-// statistics about the DB.
-#ifdef PF_STATS
-#include "statistics.h"
-
-// This is defined within the pf_buffermgr.cc
-extern StatisticsMgr *pStatisticsMgr;
-
-#endif    // PF_STATS
 
 /*
  * string representation of tokens; provided by scanner
@@ -226,7 +213,6 @@ utility
    | help
    | print
    | buffer
-   | statistics 
    | queryplans 
    ;
 
@@ -712,11 +698,13 @@ RC RBparse(PF_Manager &pfm, SM_Manager &smm, QL_Manager &qlm)
       /* Reset parser and scanner for a new query */
       new_query();
 
+#if 0
       /* Print a prompt */
       cout << PROMPT;
 
       /* Get the prompt to actually show up on the screen */
       cout.flush(); 
+#endif
 
       /* If a query was successfully read, interpret it */
       if(yyparse() == 0 && parse_tree != NULL)

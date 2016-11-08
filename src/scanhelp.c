@@ -1,15 +1,5 @@
 /*
  * scanhelp.c: help functions for lexer
- *
- * Authors: Jan Jannink
- *          Jason McHugh
- *          
- * originally by: Mark McAuliffe, University of Wisconsin - Madison, 1991
- * 
- * 1997 Changes: "print", "buffer", "reset" and "io" added.
- * 1998 Changes: "resize", "queryplans", "on" and "off" added.
- *
- *
  * This file is not compiled separately; it is #included into lex.yy.c .
  */
 
