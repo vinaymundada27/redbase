@@ -1,6 +1,5 @@
 /*
  * scanhelp.c: help functions for lexer
- *
  * This file is not compiled separately; it is #included into lex.yy.c .
  */
 

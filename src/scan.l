@@ -1,7 +1,6 @@
 %{
 /*
  * scan.l: lex spec for RQL
- *
  */
 
 #include <string.h>

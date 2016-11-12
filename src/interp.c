@@ -1,5 +1,4 @@
 /*
- * interp.c: interpreter for RQL
  */
 
 #include <stdio.h>
