@@ -11,7 +11,7 @@
 
 #include "redbase.h"  // Please don't change these lines
 #include "rm_rid.h"  // Please don't change these lines
-#include "pf.h"
+#include "ds.h"
 #include "ix_error.h"
 #include "ix_indexhandle.h"
 #include "ix_manager.h"

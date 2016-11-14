@@ -8,7 +8,7 @@
 
 #include <iostream>
 #include "redbase.h"
-#include "pf.h"
+#include "ds.h"
 //
 // Structure declarations and output functions
 //
@@ -67,7 +67,7 @@ std::ostream &operator<<(std::ostream &s, const AttrType &at);
 class QL_Manager;
 class SM_Manager;
 
-RC RBparse(PF_Manager &pfm, SM_Manager &smm, QL_Manager &qlm);
+RC RBparse(DS_Manager &pfm, SM_Manager &smm, QL_Manager &qlm);
 
 //
 // Error printing function; calls component-specific functions

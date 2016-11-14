@@ -21,7 +21,7 @@
 #include "redbase.h"
 #include "rm_error.h"
 #include "rm_rid.h"
-#include "pf.h"
+#include "ds.h"
 #include "predicate.h"
 
 //
@@ -141,7 +141,7 @@ class RM_FileHandle {
   friend class RM_Manager;
 public:
   RM_FileHandle ();
-  RC Open(PF_FileHandle*, int recordSize);
+  RC Open(DS_FileHandle*, int recordSize);
   RC SetHdr(RM_FileHdr h) { hdr = h; return 0;}
   ~RM_FileHandle();
 
@@ -157,7 +157,7 @@ public:
   // from the buffer pool to disk.  Default value forces all pages.
   RC ForcePages (PageNum pageNum = ALL_PAGES);
 
-  RC GetPF_FileHandle(PF_FileHandle &) const;
+  RC GetPF_FileHandle(DS_FileHandle &) const;
   bool hdrChanged() const { return bHdrChanged; }
   int fullRecordSize() const { return hdr.extRecordSize; }
   int GetNumPages() const { return hdr.numPages; }
@@ -170,17 +170,17 @@ private:
 
   // Return next free page or allocate one as needed.
   RC GetNextFreePage(PageNum& pageNum);
-  RC GetNextFreeSlot(PF_PageHandle& ph, PageNum& pageNum, SlotNum&);
-  RC GetPageHeader(PF_PageHandle ph, RM_PageHdr & pHdr) const;
-  RC SetPageHeader(PF_PageHandle ph, const RM_PageHdr& pHdr);
-  RC GetSlotPointer(PF_PageHandle ph, SlotNum s, char *& pData) const;
+  RC GetNextFreeSlot(DS_PageHandle& ph, PageNum& pageNum, SlotNum&);
+  RC GetPageHeader(DS_PageHandle ph, RM_PageHdr & pHdr) const;
+  RC SetPageHeader(DS_PageHandle ph, const RM_PageHdr& pHdr);
+  RC GetSlotPointer(DS_PageHandle ph, SlotNum s, char *& pData) const;
 
   // write hdr member using a newly open file's header page
-  RC GetFileHeader(PF_PageHandle ph);
+  RC GetFileHeader(DS_PageHandle ph);
   // persist header into the first page of a file for later
-  RC SetFileHeader(PF_PageHandle ph) const;
+  RC SetFileHeader(DS_PageHandle ph) const;
 
-  PF_FileHandle *pfHandle;                       // pointer to opened PF_FileHandle
+  DS_FileHandle *pfHandle;                       // pointer to opened PF_FileHandle
   RM_FileHdr hdr;                                // file header
   bool bFileOpen;                                // file open flag
   bool bHdrChanged;                              // dirty flag for file hdr
@@ -219,7 +219,7 @@ class RM_FileScan {
 //
 class RM_Manager {
 public:
-  RM_Manager    (PF_Manager &pfm);
+  RM_Manager    (DS_Manager &pfm);
   ~RM_Manager   ();
 
   RC CreateFile (const char *fileName, int recordSize);
@@ -229,7 +229,7 @@ public:
   RC CloseFile  (RM_FileHandle &fileHandle);
 
 private:
-  PF_Manager&   pfm; // A reference to the external PF_Manager
+  DS_Manager&   pfm; // A reference to the external DS_Manager
 };
 
 #endif // RM_H

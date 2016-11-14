@@ -9,7 +9,7 @@
 
 #include "redbase.h"  // Please don't change these lines
 #include "rm_rid.h"  // Please don't change these lines
-#include "pf.h"
+#include "ds.h"
 #include "ix_error.h"
 #include "btree_node.h"
 //
@@ -55,10 +55,10 @@ class IX_IndexHandle {
   // Force index files to disk
   RC ForcePages();
 
-  RC Open(PF_FileHandle * pfh, int pairSize, PageNum p, int pageSize);
-  RC GetFileHeader(PF_PageHandle ph);
+  RC Open(DS_FileHandle * pfh, int pairSize, PageNum p, int pageSize);
+  RC GetFileHeader(DS_PageHandle ph);
   // persist header into the first page of a file for later
-  RC SetFileHeader(PF_PageHandle ph) const;
+  RC SetFileHeader(DS_PageHandle ph) const;
 
   bool HdrChanged() const { return bHdrChanged; }
   int GetNumPages() const { return hdr.numPages; }
@@ -100,11 +100,11 @@ class IX_IndexHandle {
 
  private:
   //Unpinning version that will unpin after every call correctly
-  RC GetThisPage(PageNum p, PF_PageHandle& ph) const;
+  RC GetThisPage(PageNum p, DS_PageHandle& ph) const;
 
   IX_FileHdr hdr;
   bool bFileOpen;
-  PF_FileHandle * pfHandle;
+  DS_FileHandle * pfHandle;
   bool bHdrChanged;
   BtreeNode * root; // root in turn points to the other nodes
   BtreeNode ** path; // list of nodes that is the path to leaf as a

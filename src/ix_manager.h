@@ -11,7 +11,7 @@
 
 #include "redbase.h"  // Please don't change these lines
 #include "rm_rid.h"  // Please don't change these lines
-#include "pf.h"
+#include "ds.h"
 #include "ix_indexhandle.h"
 
 
@@ -20,13 +20,13 @@
 //
 class IX_Manager {
  public:
-  IX_Manager(PF_Manager &pfm);
+  IX_Manager(DS_Manager &pfm);
   ~IX_Manager();
 
   // Create a new Index
   RC CreateIndex(const char *fileName, int indexNo,
                  AttrType attrType, int attrLength,
-                 int pageSize = PF_PAGE_SIZE);
+                 int pageSize = DS_PAGE_SIZE);
 
   // Destroy and Index
   RC DestroyIndex(const char *fileName, int indexNo);
@@ -38,7 +38,7 @@ class IX_Manager {
   // Close an Index
   RC CloseIndex(IX_IndexHandle &indexHandle);
  private:
-  PF_Manager& pfm;
+  DS_Manager& pfm;
 };
 
 #endif // IX_INDEX_MANAGER_H

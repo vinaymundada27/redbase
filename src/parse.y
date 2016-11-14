@@ -11,7 +11,7 @@
 #include <unistd.h>
 #include "redbase.h"
 #include "parser_internal.h"
-#include "pf.h"     // for PF_PrintError
+#include "ds.h"     // for PF_PrintError
 #include "rm.h"     // for RM_PrintError
 #include "ix.h"     // for IX_PrintError
 #include "sm.h"
@@ -50,7 +50,7 @@ int bExit;                 // when to return from RBparse
 
 int bQueryPlans;           // When to print the query plans
 
-PF_Manager *pPfm;          // PF component manager
+DS_Manager *pPfm;          // PF component manager
 SM_Manager *pSmm;          // SM component manager
 QL_Manager *pQlm;          // QL component manager
 
@@ -250,20 +250,20 @@ queryplans
 buffer
    : RW_RESET RW_BUFFER
    {
-      if (pPfm->ClearBuffer())
-         cout << "Trouble clearing buffer!  Things may be pinned.\n";
-      else 
-         cout << "Everything kicked out of Buffer!\n";
+      //if (pPfm->ClearBuffer())
+      //   cout << "Trouble clearing buffer!  Things may be pinned.\n";
+      //else 
+      //   cout << "Everything kicked out of Buffer!\n";
       $$ = NULL;
    }
    | RW_PRINT RW_BUFFER
    {
-      pPfm->PrintBuffer();
+      //pPfm->PrintBuffer();
       $$ = NULL;
    }
    | RW_RESIZE RW_BUFFER T_INT
    {
-      pPfm->ResizeBuffer($3);
+      //pPfm->ResizeBuffer($3);
       $$ = NULL;
    }
    ;
@@ -676,8 +676,9 @@ nothing
 //
 void PrintError(RC rc)
 {
-   if (abs(rc) <= END_PF_WARN)
-      PF_PrintError(rc);
+   if (abs(rc) <= END_PF_WARN) {
+      // PF_PrintError(rc);
+   }
    else if (abs(rc) <= END_RM_WARN)
       RM_PrintError(rc);
    else if (abs(rc) <= END_IX_WARN)
@@ -695,7 +696,7 @@ void PrintError(RC rc)
 //
 // Desc: Parse redbase commands
 //
-RC RBparse(PF_Manager &pfm, SM_Manager &smm, QL_Manager &qlm)
+RC RBparse(DS_Manager &pfm, SM_Manager &smm, QL_Manager &qlm)
 {
    RC rc;
 

@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
   char *dbname = argv[1];
 
   // initialize RedBase components
-  PF_Manager pfm;
+  DS_Manager pfm;
   RM_Manager rmm(pfm);
   IX_Manager ixm(pfm);
   SM_Manager smm(ixm, rmm);

@@ -29,33 +29,31 @@ STATS_OPTION   = -DPF_STATS
 #
 # Students: Please modify SOURCES variables as needed.
 #
-PF_SOURCES     = pf_buffermgr.cc pf_error.cc pf_filehandle.cc \
-                 pf_pagehandle.cc pf_hashtable.cc pf_manager.cc \
-                 pf_statistics.cc statistics.cc
+PF_SOURCES     = ds_remotemanager.cc ds_buffermanager.cc ds_filehandle.cc \
+                 ds_pagehandle.cc ds_manager.cc
 RM_SOURCES     = statistics.cc rm_manager.cc rm_error.cc rm_filescan.cc \
-                 rm_record.cc rm_filehandle.cc rm_record_gtest.cc \
-		 rm_filehandle_gtest.cc bitmap.cc bitmap_gtest.cc \
-		 pf_manager_gtest.cc predicate.cc rm_filescan_gtest.cc \
+                 rm_record.cc rm_filehandle.cc \
+		  bitmap.cc \
+		  predicate.cc \
 		 ix_error.cc sm_error.cc ql_error.cc
-IX_SOURCES     = ix_indexhandle.cc ix_indexhandle_gtest.cc \
-		 ix_manager.cc ix_manager_gtest.cc \
-		 ix_indexscan.cc ix_indexscan_gtest.cc \
-		 btree_node.cc btree_node_gtest.cc \
+IX_SOURCES     = ix_indexhandle.cc  \
+		 ix_manager.cc \
+		 ix_indexscan.cc  \
+		 btree_node.cc  \
 		 ix_error.cc statistics.cc predicate.cc
-SM_SOURCES     = statistics.cc sm_error.cc sm_manager.cc printer.cc \
-		 sm_manager_gtest.cc
+SM_SOURCES     = statistics.cc sm_error.cc sm_manager.cc printer.cc
 QL_SOURCES     = statistics.cc ql_manager.cc ql_error.cc file_scan.cc \
-		 file_scan_gtest.cc index_scan.cc index_scan_gtest.cc \
-		 nested_loop_join.cc nested_loop_join_gtest.cc \
-		 ql_manager_gtest.cc projection.cc nested_block_join_gtest.cc \
-		 merge_join.cc merge_join_gtest.cc sort_gtest.cc
+		 index_scan.cc  \
+		 nested_loop_join.cc  \
+		  projection.cc  \
+		 merge_join.cc 
 
 UTILS_SOURCES  = dbcreate.cc dbdestroy.cc redbase.cc
 PARSER_SOURCES = scan.c parse.c nodes.c interp.c
 TESTER_SOURCES = pf_test1.cc pf_test2.cc pf_test3.cc rm_test.cc \
 	         ix_test.cc parser_test.cc ix_testkpg_2.cc nested_scratch.cc \
 
-GTEST_SOURCES  = $(GTEST_ROOT)/src/gtest-all.cc
+# GTEST_SOURCES  = $(GTEST_ROOT)/src/gtest-all.cc
 
 PF_OBJECTS     = $(addprefix $(BUILD_DIR), $(PF_SOURCES:.cc=.o))
 RM_OBJECTS     = $(addprefix $(BUILD_DIR), $(RM_SOURCES:.cc=.o))
@@ -64,11 +62,11 @@ SM_OBJECTS     = $(addprefix $(BUILD_DIR), $(SM_SOURCES:.cc=.o))
 QL_OBJECTS     = $(addprefix $(BUILD_DIR), $(QL_SOURCES:.cc=.o))
 UTILS_OBJECTS  = $(addprefix $(BUILD_DIR), $(UTILS_SOURCES:.cc=.o))
 PARSER_OBJECTS = $(addprefix $(BUILD_DIR), $(PARSER_SOURCES:.c=.o))
-TESTER_OBJECTS = $(addprefix $(BUILD_DIR), $(TESTER_SOURCES:.cc=.o))
-GTEST_OBJECTS  = $(addprefix $(BUILD_DIR), gtest-all.o)
+# TESTER_OBJECTS = $(addprefix $(BUILD_DIR), $(TESTER_SOURCES:.cc=.o))
+# GTEST_OBJECTS  = $(addprefix $(BUILD_DIR), gtest-all.o)
 OBJECTS        = $(sort $(PF_OBJECTS) $(RM_OBJECTS) $(IX_OBJECTS) \
                  $(SM_OBJECTS) $(QL_OBJECTS) $(PARSER_OBJECTS) \
-                 $(TESTER_OBJECTS) $(UTILS_OBJECTS) )
+                 $(UTILS_OBJECTS) )
 
 LIBRARY_PF     = $(LIB_DIR)libpf.a
 LIBRARY_RM     = $(LIB_DIR)librm.a
@@ -85,7 +83,7 @@ UTILS          = $(UTILS_SOURCES:.cc=)
 TESTS          = $(TESTER_SOURCES:.cc=)
 EXECUTABLES    = $(UTILS) $(TESTS)
 
-LIBS           = -lparser -lql ../lib/libsm.a -lboost_system -lboost_thread -pthread -lix -lrm -lpf -lgtest
+LIBS           = -lparser -lql ../lib/libsm.a -lboost_system -lboost_thread -lboost_filesystem -pthread -lix -lrm -lpf -lgtest
 
 #
 # Build targets
@@ -172,15 +170,15 @@ $(BUILD_DIR)interp.o: interp.c
 #
 
 # create gtest library object
-$(BUILD_DIR)gtest-all.o: $(GTEST_SOURCES)
-	$(CC) $(CFLAGS) -DGTEST_HAS_PTHREAD=0 -c $< -o $@
+# $(BUILD_DIR)gtest-all.o: $(GTEST_SOURCES)
+	# $(CC) $(CFLAGS) -DGTEST_HAS_PTHREAD=0 -c $< -o $@
 
-$(BUILD_DIR)gtest_main.o: $(GTEST_ROOT)/src/gtest_main.cc
-	$(CC) $(CFLAGS) -c $< -o $@
+# $(BUILD_DIR)gtest_main.o: $(GTEST_ROOT)/src/gtest_main.cc/
+	# $(CC) $(CFLAGS) -c $< -o $@
 
 # link in all the *_gtest.cc files that contain unit tests
-gtest: $(BUILD_DIR)gtest_main.o $(filter %_gtest.o,$(OBJECTS)) $(LIBRARIES)
-	$(CC) $(CFLAGS) $^ -o $@ -L$(LIB_DIR) $(LIBS)
+# gtest: $(BUILD_DIR)gtest_main.o $(filter %_gtest.o,$(OBJECTS)) $(LIBRARIES)
+	# $(CC) $(CFLAGS) $^ -o $@ -L$(LIB_DIR) $(LIBS)
 
 #
 # Rules

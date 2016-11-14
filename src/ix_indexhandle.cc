@@ -15,7 +15,7 @@ IX_IndexHandle::~IX_IndexHandle()
 {
   if(root != NULL && pfHandle != NULL) {
     // unpin old root page 
-    pfHandle->UnpinPage(hdr.rootPage);
+    pfHandle->unpinPage(hdr.rootPage);
     delete root;
     root = NULL;
   }
@@ -28,7 +28,7 @@ IX_IndexHandle::~IX_IndexHandle()
     for (int i = 1; i < hdr.height; i++) 
       if(path[i] != NULL) {
         if(pfHandle != NULL)
-          pfHandle->UnpinPage(path[i]->GetPageRID().Page());
+          pfHandle->unpinPage(path[i]->GetPageRID().Page());
         // delete path[i]; - better leak than crash
       }
     delete [] path;
@@ -110,7 +110,7 @@ RC IX_IndexHandle::InsertEntry(void *pData, const RID& rid)
     delete [] charPtr;
 
     // make new  node
-    PF_PageHandle ph;
+    DS_PageHandle ph;
     PageNum p;
     RC rc = GetNewPage(p);
     if (rc != 0) return rc;
@@ -187,12 +187,12 @@ RC IX_IndexHandle::InsertEntry(void *pData, const RID& rid)
     // cerr << "root split happened" << endl;
 
     // unpin old root page 
-    RC rc = pfHandle->UnpinPage(hdr.rootPage);
+    RC rc = pfHandle->unpinPage(hdr.rootPage);
     if (rc < 0) 
       return rc;
 
     // make new root node
-    PF_PageHandle ph;
+    DS_PageHandle ph;
     PageNum p;
     rc = GetNewPage(p);
     if (rc != 0) return IX_PF;
@@ -210,8 +210,8 @@ RC IX_IndexHandle::InsertEntry(void *pData, const RID& rid)
 
     // pin root page - should always be valid
     hdr.rootPage = root->GetPageRID().Page();
-    PF_PageHandle rootph;
-    rc = pfHandle->GetThisPage(hdr.rootPage, rootph);
+    DS_PageHandle rootph;
+    rc = pfHandle->getThisPage(hdr.rootPage, rootph);
     if (rc != 0) return rc;
 
     if(newNode != NULL) {
@@ -397,8 +397,8 @@ RC IX_IndexHandle::DeleteEntry(void *pData, const RID& rid)
     root = FetchNode(root->GetAddr(0));
     // pin root page - should always be valid
     hdr.rootPage = root->GetPageRID().Page();
-    PF_PageHandle rootph;
-    RC rc = pfHandle->GetThisPage(hdr.rootPage, rootph);
+    DS_PageHandle rootph;
+    RC rc = pfHandle->getThisPage(hdr.rootPage, rootph);
     if (rc != 0) return rc;
 
     node->Destroy();
@@ -412,30 +412,30 @@ RC IX_IndexHandle::DeleteEntry(void *pData, const RID& rid)
 }
 
 RC IX_IndexHandle::Pin(PageNum p) {
-  PF_PageHandle ph;
-  RC rc = pfHandle->GetThisPage(p, ph); 
+  DS_PageHandle ph;
+  RC rc = pfHandle->getThisPage(p, ph); 
   return rc;
 }
 
 RC IX_IndexHandle::UnPin(PageNum p) {
-  RC rc = pfHandle->UnpinPage(p); 
+  RC rc = pfHandle->unpinPage(p); 
   return rc;
 }
 
 //Unpinning version that will unpin after every call correctly
-RC IX_IndexHandle::GetThisPage(PageNum p, PF_PageHandle& ph) const {
-  RC rc = pfHandle->GetThisPage(p, ph); 
+RC IX_IndexHandle::GetThisPage(PageNum p, DS_PageHandle& ph) const {
+  RC rc = pfHandle->getThisPage(p, ph); 
   if (rc != 0) return rc;
   // Needs to be called everytime GetThisPage is called.
-  rc = pfHandle->MarkDirty(p);
+  rc = pfHandle->markDirty(p);
   if(rc!=0) return NULL;
 
-  rc = pfHandle->UnpinPage(p);
+  rc = pfHandle->unpinPage(p);
   if (rc != 0) return rc;
   return 0;
 }
 
-RC IX_IndexHandle::Open(PF_FileHandle * pfh, int pairSize, 
+RC IX_IndexHandle::Open(DS_FileHandle * pfh, int pairSize, 
                         PageNum rootPage, int pageSize)
 {
   if(bFileOpen || pfHandle != NULL) {
@@ -446,16 +446,16 @@ RC IX_IndexHandle::Open(PF_FileHandle * pfh, int pairSize,
     return IX_BADOPEN;
   }
   bFileOpen = true;
-  pfHandle = new PF_FileHandle;
+  pfHandle = new DS_FileHandle;
   *pfHandle = *pfh ;
 
-  PF_PageHandle ph;
+  DS_PageHandle ph;
   GetThisPage(0, ph);
 
   this->GetFileHeader(ph); // write into hdr member
   // std::cerr << "IX_FileHandle::Open hdr.numPages" << hdr.numPages << std::endl;
 
-  PF_PageHandle rootph;
+  DS_PageHandle rootph;
 
   bool newPage = true;
   if (hdr.height > 0) {
@@ -476,7 +476,7 @@ RC IX_IndexHandle::Open(PF_FileHandle * pfh, int pairSize,
   } 
 
   // pin root page - should always be valid
-  RC rc = pfHandle->GetThisPage(hdr.rootPage, rootph);
+  RC rc = pfHandle->getThisPage(hdr.rootPage, rootph);
   if (rc != 0) return rc;
 
   // rc = pfHandle->MarkDirty(hdr.rootPage);
@@ -500,10 +500,10 @@ RC IX_IndexHandle::Open(PF_FileHandle * pfh, int pairSize,
 }
 
 // get header from the first page of a newly opened file
-RC IX_IndexHandle::GetFileHeader(PF_PageHandle ph)
+RC IX_IndexHandle::GetFileHeader(DS_PageHandle ph)
 {
   char * buf;
-  RC rc = ph.GetData(buf);
+  RC rc = ph.getData(buf);
   if (rc != 0)
     return rc;
   memcpy(&hdr, buf, sizeof(hdr));
@@ -511,10 +511,10 @@ RC IX_IndexHandle::GetFileHeader(PF_PageHandle ph)
 }
 
 // persist header into the first page of a file for later
-RC IX_IndexHandle::SetFileHeader(PF_PageHandle ph) const 
+RC IX_IndexHandle::SetFileHeader(DS_PageHandle ph) const 
 {
   char * buf;
-  RC rc = ph.GetData(buf);
+  RC rc = ph.getData(buf);
   if (rc != 0)
     return rc;
   memcpy(buf, &hdr, sizeof(hdr));
@@ -525,8 +525,8 @@ RC IX_IndexHandle::SetFileHeader(PF_PageHandle ph) const
 // from the buffer pool to disk.  Default value forces all pages.
 RC IX_IndexHandle::ForcePages ()
 {
-  RC invalid = IsValid(); if(invalid) return invalid;
-  return pfHandle->ForcePages(ALL_PAGES);
+  // RC invalid = IsValid(); if(invalid) return invalid;
+  // return pfHandle->ForcePages(ALL_PAGES);
 }
 
 // Users will call - RC invalid = IsValid(); if(invalid) return invalid; 
@@ -546,11 +546,11 @@ RC IX_IndexHandle::IsValid () const
 RC IX_IndexHandle::GetNewPage(PageNum& pageNum) 
 {
   RC invalid = IsValid(); if(invalid) return invalid;
-  PF_PageHandle ph;
+  DS_PageHandle ph;
 
   RC rc;
-  if ((rc = pfHandle->AllocatePage(ph)) ||
-      (rc = ph.GetPageNum(pageNum)))
+  if ((rc = pfHandle->allocatePage(ph)) ||
+      (rc = ph.getPageNum(pageNum)))
     return(rc);
   
   // the default behavior of the buffer pool is to pin pages
@@ -558,7 +558,7 @@ RC IX_IndexHandle::GetNewPage(PageNum& pageNum)
   // things up
   if (
 //  (rc = pfHandle->MarkDirty(pageNum)) ||
-    (rc = pfHandle->UnpinPage(pageNum)))
+    (rc = pfHandle->unpinPage(pageNum)))
     return rc;
   // cerr << "GetNewPage called to get page " << pageNum << endl;
   hdr.numPages++;
@@ -571,9 +571,9 @@ RC IX_IndexHandle::DisposePage(const PageNum& pageNum)
 {
   RC invalid = IsValid(); if(invalid) return invalid;
 
-  RC rc;
-  if ((rc = pfHandle->DisposePage(pageNum)))
-    return(rc);
+  // RC rc;
+  // if ((rc = pfHandle->disposePage(pageNum)))
+  //   return(rc);
   
   hdr.numPages--;
   assert(hdr.numPages > 0); // page 0 is this page in worst case
@@ -606,7 +606,7 @@ BtreeNode* IX_IndexHandle::FindSmallestLeaf()
     }
     // start with a fresh path
     if(path[i] != NULL) {
-      RC rc = pfHandle->UnpinPage(path[i]->GetPageRID().Page());
+      RC rc = pfHandle->unpinPage(path[i]->GetPageRID().Page());
       if(rc < 0) {
         PrintErrorAll(rc);
       }
@@ -615,9 +615,9 @@ BtreeNode* IX_IndexHandle::FindSmallestLeaf()
       path[i] = NULL;
     }
     path[i] = FetchNode(r);
-    PF_PageHandle dummy;
+    DS_PageHandle dummy;
     // pin path pages
-    RC rc = pfHandle->GetThisPage(path[i]->GetPageRID().Page(), dummy);
+    RC rc = pfHandle->getThisPage(path[i]->GetPageRID().Page(), dummy);
     if (rc != 0) return NULL;
     pathP[i-1] = 0; // dummy
   }
@@ -649,15 +649,15 @@ BtreeNode* IX_IndexHandle::FindLargestLeaf()
     }
     // start with a fresh path
     if(path[i] != NULL) {
-      RC rc = pfHandle->UnpinPage(path[i]->GetPageRID().Page());
+      RC rc = pfHandle->unpinPage(path[i]->GetPageRID().Page());
       if (rc < 0) return NULL;
       delete path[i];
       path[i] = NULL;
     }
     path[i] = FetchNode(r);
-    PF_PageHandle dummy;
+    DS_PageHandle dummy;
     // pin path pages
-    RC rc = pfHandle->GetThisPage(path[i]->GetPageRID().Page(), dummy);
+    RC rc = pfHandle->getThisPage(path[i]->GetPageRID().Page(), dummy);
     if (rc != 0) return NULL;
     pathP[i-1] = 0; // dummy
   }
@@ -700,16 +700,16 @@ BtreeNode* IX_IndexHandle::FindLeaf(const void *pData)
     }
     // start with a fresh path
     if(path[i] != NULL) {
-      RC rc = pfHandle->UnpinPage(path[i]->GetPageRID().Page());
+      RC rc = pfHandle->unpinPage(path[i]->GetPageRID().Page());
       // if (rc != 0) return NULL;
       delete path[i];
       path[i] = NULL;
     }
     path[i] = FetchNode(r.Page());
-    PF_PageHandle dummy;
+    DS_PageHandle dummy;
     // pin path pages
     
-    RC rc = pfHandle->GetThisPage(path[i]->GetPageRID().Page(), dummy);
+    RC rc = pfHandle->getThisPage(path[i]->GetPageRID().Page(), dummy);
     if (rc != 0) return NULL;
 
     pathP[i-1] = pos;
@@ -732,7 +732,7 @@ BtreeNode* IX_IndexHandle::FetchNode(RID r) const
 {
   RC invalid = IsValid(); if(invalid) return NULL;
   if(r.Page() < 0) return NULL;
-  PF_PageHandle ph;
+  DS_PageHandle ph;
   RC rc = GetThisPage(r.Page(), ph);
   if(rc != 0) { 
     PrintErrorAll(rc);
@@ -864,7 +864,7 @@ BtreeNode* IX_IndexHandle::FindLeafForceRight(const void* pData)
         if(r->CmpKey(k, pData) == 0) {
           // cerr << "bingo: dups to the right at leaf " << *(int*)pData << "\n";
 
-          RC rc = pfHandle->UnpinPage(path[hdr.height-1]->GetPageRID().Page());
+          RC rc = pfHandle->unpinPage(path[hdr.height-1]->GetPageRID().Page());
           if(rc < 0) {
             PrintErrorAll(rc);
           }

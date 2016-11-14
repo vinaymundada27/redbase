@@ -8,7 +8,7 @@
 // Desc: Constructor - intended to be called once at begin of program
 //       Handles creation, deletion, opening and closing of files.
 //
-IX_Manager::IX_Manager(PF_Manager & pfm):
+IX_Manager::IX_Manager(DS_Manager & pfm):
   pfm(pfm)
 {
   
@@ -59,34 +59,34 @@ RC IX_Manager::CreateIndex (const char *fileName, int indexNo,
 
   //TODO verify that RM file actually exists
 
-  int RC = pfm.CreateFile(newname.str().c_str());
+  int RC = pfm.createFile((char *)newname.str().c_str());
   if (RC < 0)
   {
-    PF_PrintError(RC);
+    // PF_PrintError(rc);
     return IX_PF;
   }
    
-  PF_FileHandle pfh;
-  RC = pfm.OpenFile(newname.str().c_str(), pfh);
+  DS_FileHandle pfh;
+  RC = pfm.loadFile((char *)newname.str().c_str(), pfh);
   if (RC < 0)
   {
-    PF_PrintError(RC);
+    // PF_PrintError(rc);
     return IX_PF;
   }
    
-  PF_PageHandle headerPage;
+  DS_PageHandle headerPage;
   char * pData;
    
-  RC = pfh.AllocatePage(headerPage);
+  RC = pfh.allocatePage(headerPage);
   if (RC < 0)
   {
-    PF_PrintError(RC);
+    // PF_PrintError(rc);
     return IX_PF;
   }
-  RC = headerPage.GetData(pData);
+  RC = headerPage.getData(pData);
   if (RC < 0)
   {
-    PF_PrintError(RC);
+    // PF_PrintError(rc);
     return IX_PF;
   }
   IX_FileHdr hdr;
@@ -102,26 +102,26 @@ RC IX_Manager::CreateIndex (const char *fileName, int indexNo,
   memcpy(pData, &hdr, sizeof(hdr));
   //TODO - remove PF_PrintError or make it #define optional
   PageNum headerPageNum;
-  headerPage.GetPageNum(headerPageNum);
+  headerPage.getPageNum(headerPageNum);
   assert(headerPageNum == 0);
-  RC = pfh.MarkDirty(headerPageNum);
+  RC = pfh.markDirty(headerPageNum);
   if (RC < 0)
   {
-    PF_PrintError(RC);
+    // PF_PrintError(rc);
     return IX_PF;
   }
-  RC = pfh.UnpinPage(headerPageNum);
+  RC = pfh.unpinPage(headerPageNum);
   if (RC < 0)
   {
-    PF_PrintError(RC);
+    // PF_PrintError(rc);
     return IX_PF;
   }  
-  RC = pfm.CloseFile(pfh);
-  if (RC < 0)
-  {
-    PF_PrintError(RC);
-    return IX_PF;
-  }
+  // RC = pfm.CloseFile(pfh);
+  // if (RC < 0)
+  // {
+  //   // PF_PrintError(rc);
+  //   return IX_PF;
+  // }
   return (0);
 }
 
@@ -134,19 +134,19 @@ RC IX_Manager::CreateIndex (const char *fileName, int indexNo,
 //
 RC IX_Manager::DestroyIndex (const char *fileName, int indexNo)
 {
-  if(indexNo < 0 ||
-     fileName == NULL)
-    return IX_FCREATEFAIL;
+  // if(indexNo < 0 ||
+  //    fileName == NULL)
+  //   return IX_FCREATEFAIL;
 
-  stringstream newname;
-  newname << fileName << "." << indexNo;
+  // stringstream newname;
+  // newname << fileName << "." << indexNo;
 
-  RC RC = pfm.DestroyFile(newname.str().c_str()); 
-  if (RC < 0)
-  {
-    PF_PrintError(RC);
-    return IX_PF;
-  }
+  // RC RC = pfm.DestroyFile(newname.str().c_str()); 
+  // if (RC < 0)
+  // {
+  //   // PF_PrintError(rc);
+  //   return IX_PF;
+  // }
   return 0;
 }
 
@@ -166,21 +166,21 @@ RC IX_Manager::OpenIndex (const char *fileName, int indexNo, IX_IndexHandle &ixh
      fileName == NULL)
     return IX_FCREATEFAIL;
 
-  PF_FileHandle pfh;
+  DS_FileHandle pfh;
   stringstream newname;
   newname << fileName << "." << indexNo;
 
-  RC rc = pfm.OpenFile(newname.str().c_str(), pfh);
+  RC rc = pfm.loadFile((char *)newname.str().c_str(), pfh);
   if (rc < 0)
   {
-    PF_PrintError(rc);
+    // PF_PrintError(rc);
     return IX_PF;
   }
   // header page is at 0
-  PF_PageHandle ph;
+  DS_PageHandle ph;
   char * pData;
-  if ((rc = pfh.GetThisPage(0, ph)) ||
-      (rc = ph.GetData(pData)))
+  if ((rc = pfh.getThisPage(0, ph)) ||
+      (rc = ph.getData(pData)))
     return(rc);
   IX_FileHdr hdr;
   memcpy(&hdr, pData, sizeof(hdr));
@@ -190,10 +190,10 @@ RC IX_Manager::OpenIndex (const char *fileName, int indexNo, IX_IndexHandle &ixh
     IX_PrintError(rc);
     return rc;
   }
-  rc = pfh.UnpinPage(0);
+  rc = pfh.unpinPage(0);
   if (rc < 0)
   {
-    PF_PrintError(rc);
+    // PF_PrintError(rc);
     return rc;
   }
 
@@ -220,32 +220,32 @@ RC IX_Manager::CloseIndex(IX_IndexHandle &ixh)
   {
     // cerr << "IX_Manager::CloseIndex - header changed\n";
     // write header to disk
-    PF_PageHandle ph;
-    RC rc = ixh.pfHandle->GetThisPage(0, ph);
+    DS_PageHandle ph;
+    RC rc = ixh.pfHandle->getThisPage(0, ph);
     if (rc < 0)
     {
-      PF_PrintError(rc);
+      // PF_PrintError(rc);
       return rc;
     }
 
     rc = ixh.SetFileHeader(ph); // write hdr into file
     if (rc < 0)
     {
-      PF_PrintError(rc);
+      // PF_PrintError(rc);
       return rc;
     }
 
-    rc = ixh.pfHandle->MarkDirty(0);
+    rc = ixh.pfHandle->markDirty(0);
     if (rc < 0)
     {
-      PF_PrintError(rc);
+      // PF_PrintError(rc);
       return rc;
     }
 
-    rc = ixh.pfHandle->UnpinPage(0);
+    rc = ixh.pfHandle->unpinPage(0);
     if (rc < 0)
     {
-      PF_PrintError(rc);
+      // PF_PrintError(rc);
       return rc;
     }
 
@@ -259,13 +259,13 @@ RC IX_Manager::CloseIndex(IX_IndexHandle &ixh)
     }
   }
       
-  RC rc2 = pfm.CloseFile(*ixh.pfHandle);
-  if (rc2 < 0) {
-    PF_PrintError(rc2);
-    return rc2;
-  }
-  ixh.~IX_IndexHandle();
-  ixh.pfHandle = NULL;
-  ixh.bFileOpen = false;
+  // RC rc2 = pfm.CloseFile(*ixh.pfHandle);
+  // if (rc2 < 0) {
+  //   PF_PrintError(rc2);
+  //   return rc2;
+  // }
+  // ixh.~IX_IndexHandle();
+  // ixh.pfHandle = NULL;
+  // ixh.bFileOpen = false;
   return 0;
 }

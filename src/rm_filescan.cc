@@ -49,7 +49,7 @@ RC RM_FileScan::OpenScan(const RM_FileHandle &fileHandle,
        (attrType > STRING))
       return RM_FCREATEFAIL;
 
-    if(attrLength >= PF_PAGE_SIZE - (int)sizeof(RID) ||
+    if(attrLength >= DS_PAGE_SIZE - (int)sizeof(RID) ||
        attrLength <= 0)
       return RM_RECSIZEMISMATCH;
 
@@ -99,14 +99,14 @@ RC RM_FileScan::GetNextRec     (RM_Record &rec)
     return RM_FNOTOPEN;
   assert(prmh != NULL && pred != NULL && bOpen);
 
-  PF_PageHandle ph;
+  DS_PageHandle ph;
   RM_PageHdr pHdr(prmh->GetNumSlots());
   RC rc;
   
   for( int j = current.Page(); j < prmh->GetNumPages(); j++) {
-    if((rc = prmh->pfHandle->GetThisPage(j, ph))
+    if((rc = prmh->pfHandle->getThisPage(j, ph))
        // Needs to be called everytime GetThisPage is called.
-       || (rc = prmh->pfHandle->UnpinPage(j)))
+       || (rc = prmh->pfHandle->unpinPage(j)))
       return rc;
 
     if((rc = prmh->GetPageHeader(ph, pHdr)))

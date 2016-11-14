@@ -10,7 +10,7 @@
 #include "ix_error.h"
 #include "sm_error.h"
 #include "ql_error.h"
-#include "pf.h"
+#include "ds.h"
 
 using namespace std;
 
@@ -78,9 +78,9 @@ void PrintErrorAll(RC rc)
   if ((rc >= START_RM_WARN && rc <= RM_LASTWARN)
       || (-rc >= -START_RM_ERR && -rc <= -RM_LASTERROR))
     RM_PrintError(rc);
-  else if ((rc >= START_PF_WARN && rc <= PF_LASTWARN)
-           || (-rc >= -START_PF_ERR && -rc <= -PF_LASTERROR))
-    PF_PrintError(rc);
+  // else if ((rc >= START_PF_WARN && rc <= PF_LASTWARN)
+  //          || (-rc >= -START_PF_ERR && -rc <= -PF_LASTERROR))
+  //   PF_PrintError(rc);
   else if ((rc >= START_IX_WARN && rc <= IX_LASTWARN)
            || (-rc >= -START_IX_ERR && -rc <= -IX_LASTERROR))
     IX_PrintError(rc);

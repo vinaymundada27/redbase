@@ -4,8 +4,20 @@
 #include <cstring>
 #include <string>
 #include <sstream>
-#include <unistd.h>
 #include <stddef.h>
+#include <fstream>
+#include <stdio.h>
+#include <cstdlib>
+#include <thread>
+#include <utility>
+#include <stdlib.h>
+#include <fcntl.h>   /* For O_RDWR */
+#include <unistd.h>
+#define BOOST_NO_CXX11_SCOPED_ENUMS
+#include <boost/filesystem.hpp>
+#undef BOOST_NO_CXX11_SCOPED_ENUMS
+#include <boost/algorithm/string.hpp>                                                                                                                                                
+#include <boost/asio.hpp>
 #include "rm.h"
 #include "sm.h"
 #include "redbase.h"
@@ -51,7 +63,7 @@ int main(int argc, char *argv[])
   }
 
   // Create the system catalogs...
-  PF_Manager pfm;
+  DS_Manager pfm;
   RM_Manager rmm(pfm);
   RM_FileHandle relfh, attrfh;
 

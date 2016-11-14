@@ -1,9 +1,9 @@
 #include "btree_node.h"
-#include "pf.h"
+#include "ds.h"
 #include <cstdlib>
 
 BtreeNode::BtreeNode(AttrType attrType, int attrLength,
-                     PF_PageHandle& ph, bool newPage,
+                     DS_PageHandle& ph, bool newPage,
                      int pageSize)
 :keys(NULL), rids(NULL),
  attrLength(attrLength), attrType(attrType)
@@ -23,13 +23,13 @@ BtreeNode::BtreeNode(AttrType attrType, int attrLength,
   // Intermediate Node - RID(i) points to the ix page associated with
   // keys <= keys(i)
   char * pData = NULL;
-  RC rc = ph.GetData(pData);
+  RC rc = ph.getData(pData);
   if (rc != 0) {
     // bad page - call IsValid after construction to check
     return;
   }
 
-  PageNum p; ph.GetPageNum(p);
+  PageNum p; ph.getPageNum(p);
   SetPageRID(RID(p, -1));
 
   keys = pData;
@@ -61,7 +61,7 @@ BtreeNode::~BtreeNode()
   // cerr << "Destructor for BtreeNode - page id " << pageRID << endl;
 };
 
-RC BtreeNode::ResetBtreeNode(PF_PageHandle& ph, const BtreeNode& rhs)
+RC BtreeNode::ResetBtreeNode(DS_PageHandle& ph, const BtreeNode& rhs)
 {
   order = (rhs.order);
   attrLength = (rhs.attrLength);
@@ -69,10 +69,10 @@ RC BtreeNode::ResetBtreeNode(PF_PageHandle& ph, const BtreeNode& rhs)
   numKeys = (rhs.numKeys);
   
   char * pData = NULL;
-  RC rc = ph.GetData(pData);
+  RC rc = ph.getData(pData);
   if(rc != 0 ) return rc;
 
-  PageNum p; rc = ph.GetPageNum(p);
+  PageNum p; rc = ph.getPageNum(p);
   if(rc != 0 ) return rc;
   SetPageRID(RID(p, -1));
 

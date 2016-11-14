@@ -2,7 +2,7 @@
 #define BTREE_NODE_H
 
 #include "redbase.h"
-#include "pf.h"
+#include "ds.h"
 #include "rm_rid.h"
 #include "ix_error.h"
 #include <iosfwd>
@@ -14,9 +14,9 @@ class BtreeNode {
   // if newPage is false then the page ph is expected to contain an
   // existing btree node, otherwise a fresh node is assumed.
   BtreeNode(AttrType attrType, int attrLength,
-            PF_PageHandle& ph, bool newPage = true,
-            int pageSize = PF_PAGE_SIZE);
-  RC ResetBtreeNode(PF_PageHandle& ph, const BtreeNode& rhs);
+            DS_PageHandle& ph, bool newPage = true,
+            int pageSize = DS_PAGE_SIZE);
+  RC ResetBtreeNode(DS_PageHandle& ph, const BtreeNode& rhs);
   ~BtreeNode();
   int Destroy();
 
